@@ -1,5 +1,5 @@
 # **Sonic-Nexus-RSDKv4**
-+ A Very W.I.P. port of the fangame Sonic Nexus from RSDKv2 to RSDKv4.
++ A port of the fangame Sonic Nexus from RSDKv2 to RSDKv4.
 
 ## **What is Sonic Nexus?**
 + Sonic Nexus was a game created by Nexus Team. The game used RSDKv2 by The Taxman. It had a playable demo at SAGE 2008.
