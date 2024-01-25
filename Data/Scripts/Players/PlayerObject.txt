@@ -5462,7 +5462,7 @@ event ObjectStartup
 		case PLAYER_TAILS_A
 			player[SLOT_PLAYER1].type 		= TypeName[Tails Object]
 			player[SLOT_PLAYER1].character  = PLAYER_TAILS_A
-			ANI_PEELOUT 						= ANI_RUNNING
+			ANI_PEELOUT 					= ANI_RUNNING
 			LoadAnimation("Tails.ani")
 			player[SLOT_PLAYER1].jumpOffset = -1
 

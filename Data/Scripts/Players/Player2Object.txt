@@ -1102,6 +1102,7 @@ event ObjectStartup
 			player[SLOT_PLAYER2].character 	= PLAYER_TAILS_A
 			player[SLOT_PLAYER2].jumpOffset 	= -1
 			player[SLOT_PLAYER2].jumpAbility 	= Player_Action_DblJumpTails
+			ANI_PEELOUT 			= ANI_RUNNING
 			stage.player2Enabled 	= false
 			break
 			
