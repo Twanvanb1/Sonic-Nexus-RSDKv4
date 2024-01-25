@@ -1,0 +1,121 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Press Start Script
+// Script Author: Taxman
+// Script Porter: Twanvanb1
+// ----------------------------------
+
+private alias object.value0 : object.timer
+private alias object.value1 : object.Alpha
+
+// States
+private alias  0 : START_AWAITACTION
+private alias  1 : START_NEWGAME
+
+event ObjectUpdate
+	switch Object.State
+	case START_AWAITACTION
+		if engine.deviceType == MOBILE
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+
+			if keyPress[0].start == true
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+		else 
+			if keyPress[0].start == true
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+			
+			if keyPress[0].buttonA == true
+				stage.playerListPos = 0
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+			
+			if keyPress[0].buttonB == true
+				stage.playerListPos = 1
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+			
+			if keyPress[0].buttonC == true
+				stage.playerListPos = 2
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
+			end if
+			
+			// if keyPress[0].buttonX == true
+			// 	stage.playerListPos = 4
+			// 	object.state = START_NEWGAME
+			// 	PlaySfx(SfxName[Enter], false)
+			// end if
+		end if
+		break
+	case START_NEWGAME
+		Music.Volume -= 2
+		Object.Alpha += 4
+
+		if Object.Alpha == 384
+			player.lives = 3
+			player.score = 0
+			StopMusic()
+			Stage.ActiveList = REGULAR_STAGE
+			Stage.ListPos = 0
+			LoadStage()
+		end if
+
+		SetScreenFade(0x00, 0x00, 0x00, Object.Alpha)
+		break
+	end switch
+
+end event
+
+event ObjectDraw
+
+	Object.timer++
+	if Object.timer > 29
+		Object.timer = 0
+	end if
+	
+	temp1 = screen.ysize
+	temp1 -= 46
+	if engine.deviceType == MOBILE
+		if Object.timer > 14
+			temp0 = screen.xcenter
+			temp0 -= 32
+			DrawSpriteScreenXY(2, temp0, temp1)
+			DrawSpriteScreenXY(3, screen.xcenter, temp1)
+			temp0 += 64
+			DrawSpriteScreenXY(4, temp0, temp1)
+		end if
+	else
+		if Object.timer > 14
+			temp0 = screen.xcenter
+			temp0 -= 23
+			DrawSpriteScreenXY(0, temp0, temp1)
+			temp0 += 46
+			DrawSpriteScreenXY(1, temp0, temp1)
+		end if
+	end if
+
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("NexusTitle/Menu.gif")
+	SpriteFrame(-20, 0, 41, 13, 1, 1)	//#0 PRESS
+	SpriteFrame(-20, 0, 41, 13, 1, 15) 	// #1 START
+	SpriteFrame(-20, 0, 41, 13, 1, 29) 	// #2 TOUCH
+	SpriteFrame(-8, 0, 17, 13, 1, 43) 	// #3 TO
+	SpriteFrame(-20, 0, 41, 13, 1, 15) 	// #4 START
+end event
+
+event RSDK
+	LoadSpriteSheet("NexusTitle/Menu.gif")
+	SetEditorIcon(Icon1,0,-46,-6,41,13,1,1)
+end event

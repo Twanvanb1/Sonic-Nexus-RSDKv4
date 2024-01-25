@@ -1,0 +1,121 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Tube Switch Object
+// Script Author: Twanvanb1
+// ----------------------------------
+
+private alias 37 : TYPE_TUBESWITCH
+
+//----Player Object Variables----//
+private alias Object.speed 				: player.speed
+private alias Object.state 				: player.state
+private alias Object.animation 			: player.animation
+private alias Object.entitypos 			: player.entitypos
+private alias Object.collisionmode 		: player.collisionmode
+private alias Object.collisionplane 	: player.collisionplane
+private alias Object.gravity 			: player.gravity
+private alias Object.direction 			: player.direction
+private alias Object.xvel 				: player.xvel
+
+event ObjectUpdate
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		//Is the Player Colliding with the switcher?
+		BoxCollisionTest(C_TOUCH, object.entityPos, -16, -16, 16, 16, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if CheckResult == true
+			switch Object.PropertyValue
+			case 0
+				if player[currentPlayer].Speed > 0
+					if player[currentPlayer].animation != ANI_JUMPING
+						if player[currentPlayer].state != Player_State_TubeRoll
+							PlaySfx(SfxName[Rolling], false)
+						end if
+					end if
+
+					player[currentPlayer].State = Player_State_TubeRoll
+					player[currentPlayer].Animation = ANI_JUMPING
+					
+					ArrayPos0 = player[currentPlayer].EntityPos
+					if object[ArrayPos0].speed > 0xC0000
+						object[ArrayPos0].speed = 0xC0000
+					end if
+				else
+					player[currentPlayer].State = Player_State_Roll
+					player[currentPlayer].Animation = ANI_JUMPING
+				end if
+				break
+
+			case 1
+				if player[currentPlayer].Speed < 0
+					if player[currentPlayer].animation != ANI_JUMPING
+						if player[currentPlayer].state != Player_State_TubeRoll
+							PlaySfx(SfxName[Rolling], false)
+						end if
+					end if
+
+					player[currentPlayer].State = Player_State_TubeRoll
+					player[currentPlayer].Animation = ANI_JUMPING
+
+					ArrayPos0 = player[currentPlayer].EntityPos
+					if object[ArrayPos0].speed > 0xC0000
+						object[ArrayPos0].speed = 0xC0000
+					end if
+				else
+					player[currentPlayer].State = Player_State_Roll
+					player[currentPlayer].Animation = ANI_JUMPING
+				end if
+				break
+
+			case 2
+				if player[currentPlayer].animation != ANI_JUMPING
+					if player[currentPlayer].state != Player_State_TubeRoll
+						PlaySfx(SfxName[Rolling], false)
+					end if
+				end if
+				player[currentPlayer].State = Player_State_TubeRoll
+				player[currentPlayer].Animation = ANI_JUMPING
+
+				ArrayPos0 = player[currentPlayer].EntityPos
+				object[ArrayPos0].yvel = -786432
+				player[currentPlayer].CollisionMode = CMODE_LWALL
+				//player[currentPlayer].Gravity = GRAVITY_GROUND
+				
+				if object[ArrayPos0].speed > 0xC0000
+					object[ArrayPos0].speed = 0xC0000
+				end if
+
+				break
+
+			case 3
+				player[currentPlayer].State = Player_State_Roll
+				player[currentPlayer].Animation = ANI_JUMPING
+
+				break
+			case 4
+				player[currentPlayer].CollisionPlane = 0
+				break
+
+			case 5
+				if player[currentPlayer].animation != ANI_JUMPING
+					if player[currentPlayer].state != Player_State_TubeRoll
+						PlaySfx(SfxName[Rolling], false)
+					end if
+				end if
+
+				player[currentPlayer].State = Player_State_Roll
+				player[currentPlayer].Gravity = GRAVITY_GROUND
+				player[currentPlayer].Animation = ANI_JUMPING
+				player[currentPlayer].collisionmode = CMODE_FLOOR
+
+				if player[currentPlayer].speed > 0xC0000
+					player[currentPlayer].speed = 0xC0000
+				end if
+				break
+			end switch
+		end if
+	next
+end event
+		
+sub RSDK
+	LoadSpriteSheet("NexusGlobals/Display.gif")
+	SetEditorIcon(Icon0,SingleIcon, -15, -15, 30, 30, 193, 378)
+end sub

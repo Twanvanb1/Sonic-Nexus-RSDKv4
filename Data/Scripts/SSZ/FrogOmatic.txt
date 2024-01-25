@@ -1,0 +1,128 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexusv4
+// Script Description:    Frog Badnik
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias Object.Value2 : Object.Bounce
+
+private alias 29 : TYPE_FROG
+
+// ========================
+// Function Declarations
+// ========================
+
+reserve function FrogOmatic_DebugDraw
+reserve function FrogOmatic_DebugSpawn
+
+// ========================
+// Function Definitions
+// ========================
+
+private function FrogOmatic_DebugDraw
+	DrawSprite(0)
+end function
+
+
+private function FrogOmatic_DebugSpawn
+	CreateTempObject(TypeName[FrogOmatic], 0, object.xpos, object.ypos)
+end function
+
+event Objectupdate
+
+	Object.yvel += 0x3000
+
+	Object.XPos += Object.xvel
+	Object.YPos += Object.yvel
+
+	if Object.yvel >= 0
+		ObjectTileCollision(0, 0, 20, 0)
+		if CheckResult == 1
+			Object.yvel = -0x40000
+			Object.Bounce++
+			if Object.Bounce == 4
+				Object.Bounce = 0
+				FlipSign(Object.xvel)
+			end if
+		end if
+	end if
+
+    foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		BoxCollisionTest(C_TOUCH, object.entityPos, -8, -15, 8, 20, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if checkResult == true
+			CallFunction(Player_BadnikBreak)
+		end if
+	next
+
+end event
+
+event ObjectDraw
+
+	if Object.xvel > 0
+		Object.Frame = 3
+	else
+		Object.Frame = 0
+	end if
+
+	if Object.yvel > 0x20000
+		Object.Frame += 2
+	else
+		if Object.yvel > 0x8000
+			Object.Frame++
+		end if
+	end if
+
+	if Object.yvel < -0x30000
+		Object.Frame += 2
+	else
+		if Object.yvel < -0x20000
+			Object.Frame++
+		end if
+	end if
+
+	DrawSprite(Object.Frame)
+
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	
+	//Frog Left Frames
+	SpriteFrame(-8, -16, 16, 53, 1, 1)
+	SpriteFrame(-8, -16, 16, 44, 18, 1)
+	SpriteFrame(-8, -16, 16, 35, 35, 1)
+
+	//Frog Right Frames
+	SpriteFrame(-8, -16, 16, 53, 35, 37)
+	SpriteFrame(-8, -16, 16, 44, 18, 46)
+	SpriteFrame(-8, -16, 16, 35, 1, 55)
+
+    foreach (TypeName[FrogOmatic], arrayPos0, ALL_ENTITIES)
+	    Object[ArrayPos0].xvel = -0x10000
+	next
+
+	SetTableValue(TypeName[FrogOmatic], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(FrogOmatic_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(FrogOmatic_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+	
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	
+	//Frog Left Frames
+	SpriteFrame(-8, -16, 16, 53, 1, 1)
+end event

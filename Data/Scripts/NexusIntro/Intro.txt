@@ -1,0 +1,117 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Intro Script
+// Script Author: Taxman
+// Script Porter: Twanvanb1
+// ----------------------------------
+
+private alias object.value0 : object.timer
+
+private alias 3: TYPE_INTRO
+
+private alias  0 : INTRO_LOAD_VIDEO
+private alias  1 : FADE_FROM_BLACK
+private alias  2 : PLAY_VIDEO
+private alias  3 : FADE_TO_WHITE
+
+event ObjectUpdate
+
+	switch Object.State
+	case INTRO_LOAD_VIDEO
+		ClearScreen(0)
+		Object.State = 1
+		Object.timer = 512
+		SetScreenFade(0x00, 0x00, 0x00, 0xFF)
+		break
+		
+	case FADE_FROM_BLACK
+		if Object.timer > 0
+			Object.timer -= 2
+		else
+			Object.State = 2
+			Object.Value1 = 0
+		end if
+
+		if Object.timer == 432
+			PlayMusic(0)
+			//LoadVideo("Videos/Intro.rsv")
+			//NextVideoFrame()
+		end if
+		SetScreenFade(0x00, 0x00, 0x00, Object.timer)
+		break
+	
+	case PLAY_VIDEO
+		Object.timer++
+		if Object.timer == 4
+			Object.Value1++
+			Object.timer = 0
+			//NextVideoFrame()
+		end if
+
+		if Object.Value1 == 1008
+			Object.State = 3
+		end if
+
+		if engine.deviceType == MOBILE
+			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
+			if checkResult > -1
+				object.state = FADE_TO_WHITE
+				Object.timer = 0
+			end if
+
+			if keyPress[0].start == true
+				Object.State = FADE_TO_WHITE
+				Object.timer = 0
+			end if
+		else 
+			if keyPress[0].start == true
+				Object.State = FADE_TO_WHITE
+				Object.timer = 0
+			end if
+		end if
+		
+		break
+
+	case FADE_TO_WHITE
+
+		if Object.Value1 < 1008
+			Music.Volume -= 2
+		end if
+
+		Object.timer += 4
+		Object.Scale += 16
+
+		if Object.timer == 320
+			StopMusic()
+			Stage.ListPos = 1
+			LoadStage()
+		end if
+
+		SetScreenFade(0xFF, 0xFF, 0xFF, Object.timer)
+		break
+		
+	end switch
+	
+end event
+
+event ObjectDraw
+	if Object.State<3
+		DrawSprite(0)
+	else
+		DrawSpriteFX(0, FX_SCALE, Object.XPos, Object.YPos)
+	end if
+end event
+
+event ObjectStartup
+	//Setup any Intro
+	//Objects that are present in the level
+	foreach (TypeName[Intro], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].Priority = 1
+		Object[ArrayPos0].iXPos = screen.xcenter
+		Object[ArrayPos0].iYPos = 120
+	next
+
+	SpriteFrame(-128, -80, 256, 160, 0, 0)
+
+	SetMusicTrack("Nexus/Intro.ogg", 0, false)
+end event

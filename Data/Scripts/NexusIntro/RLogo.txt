@@ -1,0 +1,87 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Retro-Sonic Screen
+// Script Author: Taxman
+// Script Porter: Twanvanb1
+// ----------------------------------
+
+private alias object.value0 : object.timer
+
+private alias 2: TYPE_RETROLOGO
+
+private alias  0 : INITIALISE
+private alias  1 : FADE_FROM_BLACK
+private alias  2 : WAIT
+private alias  3 : FADE_TO_BLACK
+
+event ObjectUpdate
+	
+	switch Object.State
+	case INITIALISE
+		LoadPalette("RetroLogo.act", 0, 0, 0, 256)
+		Object.State = FADE_FROM_BLACK
+		Object.timer = 256
+		SetScreenFade(0x00,  0x00,  0x00,  0xFF)
+		break
+		
+	case FADE_FROM_BLACK
+		if Object.timer > 0
+			Object.timer -= 4
+		else
+			Object.State = WAIT
+		end if
+		SetScreenFade(0,  0,  0,  Object.timer)
+		break
+		
+	case WAIT
+		Object.timer++
+		if Object.timer == 180
+			Object.timer = 0
+			Object.State = FADE_TO_BLACK
+		end if
+		break
+		
+	case FADE_TO_BLACK
+		if Object.timer < 256
+			Object.timer += 4
+			SetScreenFade(0x00, 0x00, 0x00, Object.timer)
+			//SetScreenFade(0xFF, 0xFF, 0xFF, Object.timer)
+		else
+			Object.timer = 0
+			Object.State = INITIALISE
+			Object.Type++
+			SetScreenFade(0x00, 0x00, 0x00, 0xFF)
+			//This is here to skip the inro cutcene, I have no Idea on how to implement it
+			// Stage.ListPos = 1
+			// LoadStage()
+			// SetScreenFade(0xFF, 0xFF, 0xFF, 0xFF)
+		end if
+		
+	end switch
+	
+end event
+
+event ObjectDraw
+	// This is here to avoid a wierd Bug in wider screens
+	DrawRect(0, 0, screen.xsize, screen.ysize, 0x00, 0x00, 0x00, 0xFF)
+	DrawSprite(0)
+end event
+
+event ObjectStartup
+
+	LoadSpriteSheet("NexusTitle/RetroLogo.gif")
+	SpriteFrame(-160, -120, 320, 240, 0, 0)
+
+	//Setup any Retro Logo
+	//Objects that are present in the level
+	foreach (TypeName[Retro Logo], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].Priority = 1
+		Object[ArrayPos0].iXPos = screen.xcenter
+		Object[ArrayPos0].iYPos = 120
+	next
+end event
+
+event RSDK
+	LoadSpriteSheet("NexusTitle/RetroLogo.gif")
+	SetEditorIcon(Icon1, 0, -160, -120, 320, 240, 0, 0)
+end event

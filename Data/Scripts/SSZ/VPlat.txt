@@ -1,0 +1,76 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    SSZ Vertical Platform
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias 28 : TYPE_VPLAT
+
+private alias Object.Value1 : Object.PlatformY
+private alias Object.Value2 : Object.ChangeY
+private alias Object.Value3 : Object.Angle
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	Object.Angle = Oscillation
+	Object.Angle <<= 1
+
+	if Object.PropertyValue == 1
+		Object.Angle += 256
+	end if
+
+	Sin(Object.ChangeY, Object.Angle)
+	Object.ChangeY <<= 13
+	Object.ChangeY += Object.YPos
+	Object.ChangeY &= 4294901760
+	Object.ChangeY -= Object.PlatformY
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		temp0 = Object.YPos
+		Object.YPos = Object.PlatformY
+		BoxCollisionTest(C_PLATFORM, object.entityPos, -32, -16, 32, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if CheckResult == 1
+			object[0].YPos += Object.ChangeY
+		end if
+
+		Object.YPos = temp0
+	next
+end event
+
+event ObjectDraw
+	Sin(Object.PlatformY, Object.Angle)
+	Object.PlatformY <<= 13
+	Object.PlatformY += Object.YPos
+	Object.PlatformY &= 4294901760
+
+	DrawSpriteXY(0, Object.XPos, Object.PlatformY)
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	//Platform Frame
+	SpriteFrame(-35, -18, 70, 36, 148, 18)
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	//Platform Frame
+	SpriteFrame(-35, -18, 70, 36, 148, 18)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,0 +1,25 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Island Script
+// Script Author: Taxman
+// Script Porter: Twanvanb1
+// ----------------------------------
+
+event ObjectDraw
+	Object.XPos -= 4096
+	DrawSprite(0)
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("NexusTitle/Island.gif")
+	SpriteFrame(-123,-28, 246, 56, 0, 0)
+
+	foreach (TypeName[Island], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].DrawOrder = 1
+	next
+end event
+
+sub RSDK
+	LoadSpriteSheet("NexusTitle/Island.gif")
+	SetEditorIcon(Icon1,0,-123,-28,246,56,0,0)
+end sub

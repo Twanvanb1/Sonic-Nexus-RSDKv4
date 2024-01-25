@@ -1,0 +1,51 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: SSZ Palette Rotate
+// Script Author: Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias 22 : TYPE_PALROTATE
+
+private alias object.value0 : object.paletteTimer
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	Object.paletteTimer++
+	if Object.paletteTimer > 4
+		Object.paletteTimer = 0
+		RotatePalette(0, 128 ,131, true)
+	end if
+end event
+
+event ObjectStartup
+	//Initialise any instances of the object
+	foreach (TypeName[Rotate Palette], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].Priority = PRIORITY_ACTIVE
+	next
+
+	//Set the music track for this Stage
+	//(I know, Random place to do it, but it saves making a new object)
+	SetMusicTrack("Nexus/SunsetShore.ogg", 0, true)
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,0 +1,433 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: HUD Object
+// Script Author: Twanvanb1
+// ----------------------------------
+
+private alias 4 : TYPE_HUD
+
+private alias Object.Value0 : Object.ScoreXPos
+private alias Object.Value1 : Object.TimeXPos
+private alias Object.Value2 : Object.RingXPos
+private alias Object.Value3 : Object.LifeXPos
+private alias Object.Value4 : FlashingTimer
+
+private alias Object.Value0 : Rings
+
+
+private alias Object[0].xpos : player.xpos
+private alias Object[0].ypos : player.ypos
+
+// Function declarations
+
+
+event ObjectDraw
+	if engine.deviceType == STANDARD
+		switch Object.State
+		case 0
+
+			if Rings[0] == 0
+				FlashingTimer++
+				if FlashingTimer == 16
+					FlashingTimer = 0
+				end if
+			else
+				if Stage.Minutes == 9
+					FlashingTimer++
+					if FlashingTimer == 16
+						FlashingTimer = 0
+					end if
+				end if
+			end if
+
+			//Draw Score
+			DrawSpriteScreenXY(10, 15, 7)
+
+			//Draw Time
+			if Stage.Minutes == 9
+				if FlashingTimer > 7
+					DrawSpriteScreenXY(13, 15, 23)
+				else
+					DrawSpriteScreenXY(11, 15, 23)
+				end if
+			else
+				DrawSpriteScreenXY(11, 15, 23)
+			end if
+
+			//Draw Rings
+			if Rings[0] == 0
+				if FlashingTimer > 7
+					DrawSpriteScreenXY(14, 15, 39)
+				else
+					DrawSpriteScreenXY(12, 15, 39)
+				end if
+			else
+				DrawSpriteScreenXY(12, 15, 39)
+			end if
+			
+			//Draw Seconds Markings
+			DrawSpriteScreenXY(15, 65, 23)
+
+			//Draw Score Numbers
+			DrawNumbers(0, 103, 7, player.score, 6, 8, 0)
+
+			//Draw Milliseconds
+			DrawNumbers(0, 103, 23, Stage.MilliSeconds, 2, 8, 1)
+
+			//Drawing the players Xpos & Ypos in debug mode
+			//Ported here for testing
+			if object[0].type == TypeName[Debug Mode]
+				temp1 = screen.xsize
+				temp1 -= 16
+				
+				temp0 = player.xpos
+				temp0 >>= 16
+				Abs(temp0)
+				DrawNumbers(0, temp1, 8, temp0, 6, 8, true)
+
+				temp0 = player.ypos
+				temp0 >>= 16
+				Abs(temp0)
+				DrawNumbers(0, temp1, 23, temp0, 6, 8, true)
+
+				temp1 -= 51
+				if player[0].xpos >= 0
+					DrawSpriteScreenXY(19, temp1, 9)
+				else
+					DrawSpriteScreenXY(21, temp1, 9)
+				end if
+
+				if player[0].xpos >= 0
+					DrawSpriteScreenXY(20, temp1, 24)
+				else
+					DrawSpriteScreenXY(22, temp1, 24)
+				end if
+			end if
+
+			//Draw Seconds
+			DrawNumbers(0, 79, 23, Stage.Seconds, 2, 8, 1)
+
+			//Draw Minutes
+			DrawNumbers(0, 55, 23, Stage.Minutes, 1, 8, 1)
+
+			//Draw Rings
+			DrawNumbers(0, 79, 39, Rings[0], 3, 8, 0)
+			
+			temp0 = stage.playerListPos
+			temp0 += 16
+			DrawSpriteScreenXY(temp0, 15, 215)
+			DrawNumbers(0, 40, 220, player.lives, 1, 8, 1)
+			break
+
+		case 1 //HUD Entering
+
+			if Object.ScoreXPos < 15
+				Object.ScoreXPos += 16
+			end if
+
+			if Object.TimeXPos < 15
+				Object.TimeXPos += 16
+			end if
+
+			if Object.RingXPos < 15
+				Object.RingXPos += 16
+			end if
+
+			if Object.LifeXPos < 15
+				Object.LifeXPos += 16
+			else
+				Object.State = 0
+				Stage.TimeEnabled = true
+			end if
+
+			//Draw Score
+			DrawSpriteScreenXY(10, Object.ScoreXPos, 7)
+			//Draw Time
+			DrawSpriteScreenXY(11, Object.TimeXPos, 23)
+			//Draw Rings
+			DrawSpriteScreenXY(12, Object.RingXPos, 39)
+
+			//Draw Seconds Markings
+			temp0 = Object.TimeXPos
+			temp0 += 50
+			DrawSpriteScreenXY(15, temp0, 23)
+
+			//Draw Score Numbers
+			temp0 = Object.ScoreXPos
+			temp0 += 88
+			DrawNumbers(0, temp0, 7, player.score, 6, 8, 0)
+
+			//Draw Milliseconds
+			temp0 = Object.TimeXPos
+			temp0 += 88
+			DrawNumbers(0, temp0, 23, Stage.MilliSeconds, 2, 8, 1)
+
+			//Draw Seconds
+			temp0 = Object.TimeXPos
+			temp0 += 64
+			DrawNumbers(0, temp0, 23, Stage.Seconds, 2, 8, 1)
+
+			//Draw Minutes
+			temp0 = Object.TimeXPos
+			temp0 += 40
+			DrawNumbers(0, temp0, 23, Stage.Minutes, 1, 8, 1)
+
+			//Draw Rings
+			temp0 = Object.RingXPos
+			temp0 += 64
+			DrawNumbers(0, temp0, 39, Rings[0], 3, 8, 0)
+
+			temp0 = stage.playerListPos
+			temp0 += 16
+			DrawSpriteScreenXY(temp0, Object.LifeXPos, 215)
+			
+			temp0 = Object.LifeXPos
+			temp0 += 25
+			DrawNumbers(0, temp0, 220, player.lives, 1, 8, 1)
+
+			break
+		end switch
+	else
+		switch Object.State
+		case 0
+			if Rings[0] == 0
+				FlashingTimer++
+				if FlashingTimer == 16
+					FlashingTimer = 0
+				end if
+			else
+				if Stage.Minutes == 9
+					FlashingTimer++
+					if FlashingTimer == 16
+						FlashingTimer = 0
+					end if
+				end if
+			end if
+
+			//Draw Score
+			DrawSpriteScreenXY(10, 15, 7)
+
+			//Draw Time
+			if Stage.Minutes == 9
+				if FlashingTimer > 7
+					DrawSpriteScreenXY(13, 15, 23)
+				else
+					DrawSpriteScreenXY(11, 15, 23)
+				end if
+			else
+				DrawSpriteScreenXY(11, 15, 23)
+			end if
+
+			//Draw Rings
+			if Rings[0] == 0
+				if FlashingTimer > 7
+					DrawSpriteScreenXY(14, 15, 39)
+				else
+					DrawSpriteScreenXY(12, 15, 39)
+				end if
+			else
+				DrawSpriteScreenXY(12, 15, 39)
+			end if
+			
+			//Draw Seconds Markings
+			DrawSpriteScreenXY(15, 65, 23)
+
+			//Draw Score Numbers
+			DrawNumbers(0, 103, 7, player.score, 6, 8, 0)
+
+			//Draw Milliseconds
+			DrawNumbers(0, 103, 23, Stage.MilliSeconds, 2, 8, 1)
+
+			//Draw Seconds
+			DrawNumbers(0, 79, 23, Stage.Seconds, 2, 8, 1)
+
+			//Draw Minutes
+			DrawNumbers(0, 55, 23, Stage.Minutes, 1, 8, 1)
+
+			//Draw Rings
+			DrawNumbers(0, 79, 39, Rings[0], 3, 8, 0)
+
+			if object[0].type == TypeName[Debug Mode]
+				temp1 = 66
+				
+				temp0 = player.xpos
+				temp0 >>= 16
+				Abs(temp0)
+				DrawNumbers(0, temp1, 55, temp0, 6, 8, true)
+
+				temp0 = player.ypos
+				temp0 >>= 16
+				Abs(temp0)
+				DrawNumbers(0, temp1, 71, temp0, 6, 8, true)	
+
+				temp1 -= 51
+				if player[0].xpos >= 0
+					DrawSpriteScreenXY(19, temp1, 56)
+				else
+					DrawSpriteScreenXY(21, temp1, 56)
+				end if
+
+				if player[0].ypos >= 0
+					DrawSpriteScreenXY(20, temp1, 72)
+				else
+					DrawSpriteScreenXY(22, temp1, 72)
+				end if			
+
+				temp0 = screen.xcenter
+				temp0 -= 16
+				DrawSpriteScreenXY(23, temp0, 16)
+
+				temp1 = screen.xcenter
+				temp1 += 8
+				DrawSpriteScreenXY(24, temp1, 16)
+			end if
+			
+			temp0 = stage.playerListPos
+			temp0 += 16
+			
+			temp1 = screen.xsize
+			temp1 -= 64
+
+			temp2 = screen.xsize
+			temp2 -= 38
+
+			DrawSpriteScreenXY(temp0, temp1, 7)
+			DrawNumbers(0, temp2, 13, player.lives, 1, 8, 1)
+			break
+
+		case 1 //HUD Entering
+
+			if Object.ScoreXPos < 15
+				Object.ScoreXPos += 16
+			end if
+
+			if Object.TimeXPos < 15
+				Object.TimeXPos += 16
+			end if
+
+			if Object.RingXPos < 15
+				Object.RingXPos += 16
+			end if
+
+			if Object.LifeXPos < 15
+				Object.LifeXPos += 16
+			else
+				Object.State = 0
+				Stage.TimeEnabled = true
+			end if
+
+			//Draw Score
+			DrawSpriteScreenXY(10, Object.ScoreXPos, 7)
+			//Draw Time
+			DrawSpriteScreenXY(11, Object.TimeXPos, 23)
+			//Draw Rings
+			DrawSpriteScreenXY(12, Object.RingXPos, 39)
+
+			//Draw Seconds Markings
+			temp0 = Object.TimeXPos
+			temp0 += 50
+			DrawSpriteScreenXY(15, temp0, 23)
+
+			//Draw Score Numbers
+			temp0 = Object.ScoreXPos
+			temp0 += 88
+			DrawNumbers(0, temp0, 7, player.score, 6, 8, 0)
+
+			//Draw Milliseconds
+			temp0 = Object.TimeXPos
+			temp0 += 88
+			DrawNumbers(0, temp0, 23, Stage.MilliSeconds, 2, 8, 1)
+
+			//Draw Seconds
+			temp0 = Object.TimeXPos
+			temp0 += 64
+			DrawNumbers(0, temp0, 23, Stage.Seconds, 2, 8, 1)
+
+			//Draw Minutes
+			temp0 = Object.TimeXPos
+			temp0 += 40
+			DrawNumbers(0, temp0, 23, Stage.Minutes, 1, 8, 1)
+
+			//Draw Rings
+			temp0 = Object.RingXPos
+			temp0 += 64
+			DrawNumbers(0, temp0, 39, Rings[0], 3, 8, 0)
+
+			temp0 = stage.playerListPos
+			temp0 += 16
+			
+			temp1 = screen.xsize
+			temp1 -= 48
+
+			temp2 = screen.xsize
+			temp2 -= 23
+
+			DrawSpriteScreenXY(temp0, temp1, 7)
+			DrawNumbers(0, temp2, 13, player.lives, 1, 8, 1)
+
+			break
+		end switch
+	end if
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Display.gif")
+	
+	//Setup Any HUD Objects that are present in the level
+	//In most cases there won't be any,  because
+	//the Titlecard spawns the HUD
+
+	ArrayPos0=32
+	while ArrayPos0<1056
+		if Object[ArrayPos0].Type == TYPE_HUD
+			Object[ArrayPos0].Priority = 1
+			Object[ArrayPos0].DrawOrder = 6
+		end if
+		ArrayPos0++
+	loop
+
+	//Numbers 0-9
+	SpriteFrame(0, 0, 9, 13, 173, 305)
+	SpriteFrame(0, 0, 9, 13, 173, 319)
+	SpriteFrame(0, 0, 9, 13, 173, 333)
+	SpriteFrame(0, 0, 9, 13, 173, 347)
+	SpriteFrame(0, 0, 9, 13, 173, 361)
+	SpriteFrame(0, 0, 9, 13, 183, 305)
+	SpriteFrame(0, 0, 9, 13, 183, 319)
+	SpriteFrame(0, 0, 9, 13, 183, 333)
+	SpriteFrame(0, 0, 9, 13, 183, 347)
+	SpriteFrame(0, 0, 9, 13, 183, 361)
+	
+	//Score Graphic
+	SpriteFrame(0, 0, 41, 13, 131, 305)
+	//Time Graphic
+	SpriteFrame(0, 0, 34, 13, 131, 319)
+	//Rings Graphic
+	SpriteFrame(0, 0, 41, 13, 131, 333)
+	
+	//Red Time Graphic
+	SpriteFrame(0, 0, 34, 13, 131, 347)
+	//Red Rings Graphic
+	SpriteFrame(0, 0, 41, 13, 131, 361)
+	
+	//Seconds markings
+	SpriteFrame(0, 0, 31, 6, 131, 375)
+
+	//life icons
+	SpriteFrame(0, 0, 26, 19, 131, 398) //Sonic
+	SpriteFrame(0, 0, 26, 19, 131, 418) //Tails
+	SpriteFrame(0, 0, 26, 19, 158, 398) //Knuckles
+
+	SpriteFrame(0, 0, 10, 10, 333, 234) //Debug yelow X
+	SpriteFrame(0, 0, 10, 10, 344, 234) //Debug yelow Y
+	SpriteFrame(0, 0, 10, 10, 333, 245) //Debug red X
+	SpriteFrame(0, 0, 10, 10, 344, 245) //Debug red Y
+	SpriteFrame(0, 0, 8, 8, 315, 234) //Debug -
+	SpriteFrame(0, 0, 8, 8, 324, 234) //Debug +
+
+end event
+
+event RSDK
+	LoadSpriteSheet("Globals/Display.gif")
+	SetEditorIcon(Icon0, SingleIcon, -11, -11, 22, 22, 170, 375)
+end event

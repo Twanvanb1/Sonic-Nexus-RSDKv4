@@ -1,0 +1,258 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    Zip Line Object
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias 40 : TYPE_ZIPLINE
+
+private alias object.angle			 :	player.angle	
+
+//private alias Object.Value0 : Object.Angle
+private alias Object.Value1 : Object.HandleX
+private alias Object.Value2 : Object.HandleY
+private alias Object.Value3 : Object.Speed
+private alias Object.Value4 : Object.TrackPos
+private alias Object.Value5 : Object.OriginX
+private alias Object.Value6 : Object.OriginY
+private alias Object.Value7 : Object.PlayerNo
+private alias Object.Scale : Object.LastY
+
+//Player Movement
+private alias 12 : HANGING
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	Object.LastY = Object.YPos
+
+	switch Object.State
+	case 0	//Stopped on the Left
+		Object.Speed += 2560
+		Object.TrackPos += Object.Speed
+		if Object.TrackPos > 0
+			Object.TrackPos = 0
+			Object.Speed = 0
+		end if
+		break
+
+	case 1	//Moving
+		if Object.XPos < Object.OriginX
+			Object.Speed += 5120
+		else
+			Object.Speed -= 5120
+		end if
+		Object.TrackPos += Object.Speed
+
+		if Object.PlayerNo>-1
+			object[0].entityPos = Object.PlayerNo
+			if object[0].state != HANGING
+				Object.State = 2
+				Object.PlayerNo = -1
+			end if
+			object[0].entityPos=0
+		end if
+
+		break
+
+	case 2	//Return
+		if Object.XPos < Object.OriginX
+			Object.Speed += 2560
+		else
+			Object.Speed -= 5120
+		end if
+		Object.TrackPos += Object.Speed
+		if Object.TrackPos < 1
+			Object.State = 0
+			if Object.Speed < -65536
+				Object.Speed = -65536
+			end if
+		end if
+		break
+	end switch
+
+	temp0 = Object.TrackPos
+	temp0 >>= 8
+	temp0 /= 404
+
+	Object.Angle = 256
+	Object.Angle -= temp0 
+
+	temp0 = Object.Angle
+	if temp0 > 256
+		temp0 = 256
+		Object.Angle -= 256
+		Object.Angle <<= 3
+		Object.Angle += 256
+	end if
+	if temp0 < 0
+		temp0 = 0
+		Object.Angle <<= 3
+		Object.Angle += 512
+	end if
+
+	Cos(Object.XPos, temp0)
+	Object.XPos *= 25856
+	Object.XPos += Object.OriginX
+		
+	Sin(Object.YPos ,temp0)
+	Object.YPos *= 53760
+	Object.YPos += Object.OriginY
+
+	Cos(Object.HandleX, Object.Angle)
+	Object.HandleX *= 4608
+	Object.HandleX += Object.XPos
+	Object.HandleX &= 4294901760
+	
+	Sin(Object.HandleY, Object.Angle)
+	Object.HandleY *= 4608
+	Object.HandleY += Object.YPos
+	Object.HandleY &= 4294901760
+
+		temp0 =Object.XPos
+		temp1=Object.YPos
+
+		Object.XPos=Object.HandleX
+		Object.YPos=Object.HandleY
+
+		if object[0].state == HANGING
+			if Object.PlayerNo == object[0].entityPos
+				object[0].xpos = Object.XPos
+				temp2 = object[0].CollisionTop
+				temp2 <<= 16
+				object[0].YPos = Object.YPos
+				object[0].YPos -= temp2
+				object[0].YPos += 786432
+
+				if object[0].JumpPress == true
+					player[0].Angle = 0
+					object[0].Speed = Object.Speed
+					object[0].gravity = GRAVITY_AIR
+					object[0].state = Player_State_Air
+					object[0].Animation = ANI_JUMPING
+					PlaySfx(SfxName[Jump], false)
+					Object.State = 2
+					Object.PlayerNo = -1
+					object[0].yvel = -0x60000
+				end if
+			end if
+		else
+			if Object.State == 0
+				if Object.TrackPos > -1
+					foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+						BoxCollisionTest(C_TOUCH, object.entityPos, -8, 2, 8, 16, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+							if CheckResult==1
+								object[0].xpos = Object.XPos
+								temp2 = object[0].CollisionTop
+								temp2 <<= 16
+								object[0].YPos = Object.YPos
+								object[0].YPos -= temp2
+								object[0].YPos += 786432
+								object[0].state = HANGING
+								object[0].Animation = ANI_HANGING
+								Object.State = 1
+								Object.Priority = 1
+								Object.PlayerNo = object[0].entityPos
+
+								if object[0].yvel > 0
+									Object.Speed = 81920
+									if temp0 < Object.OriginX
+										temp2 = object[0].yvel
+										temp2 >>= 3
+									else
+										temp2 = object[0].yvel
+										temp2 >>= 3
+										FlipSign(temp2)
+									end if
+									Object.Speed += temp2
+								else
+									Object.Speed=81920
+								end if
+
+								PlaySfx(SfxName[Catch], false)
+								
+							end if
+					next
+				end if
+			end if
+		end if
+	Object.XPos = temp0 
+	Object.YPos = temp1
+	
+end event
+
+event ObjectDraw
+	DrawSprite(0)
+
+	temp0 = 0
+	temp1 = 8
+	while temp0 < 3
+		Cos(temp2, Object.Angle)
+		temp2 *= temp1
+		temp2 <<= 7
+		temp2 += Object.XPos
+
+		Sin(temp3, Object.Angle)
+		temp3 *= temp1
+		temp3 <<= 7
+		temp3 += Object.YPos
+		DrawSpriteXY(0, temp2, temp3)
+		temp0++
+		temp1 += 8
+		
+	loop
+	DrawSpriteXY(1, Object.HandleX, Object.HandleY)
+
+end event
+
+event ObjectStartup
+
+	LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Zip Line Frames
+	SpriteFrame(-4, -4, 8, 8, 236, 44)
+	SpriteFrame(-8, -8, 16, 25, 236, 18)
+
+	//Initialise any instances of the object
+	foreach (TypeName[Zip Line], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].OriginX = Object[ArrayPos0].XPos
+		Object[ArrayPos0].OriginX += 13238272
+		Object[ArrayPos0].OriginY = Object[ArrayPos0].YPos
+		Object[ArrayPos0].PlayerNo = -1
+	next
+	
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	temp0 = object.ypos
+	DrawSpriteXY(0, object.xpos, temp0)
+
+	temp0 += 8
+	DrawSpriteXY(0, object.xpos, temp0)
+
+	temp1 = object.ypos
+	temp1 += 20
+	DrawSpriteXY(1, object.xpos, temp1)
+end event
+
+event RSDKStartup
+	LoadSpriteSheet("SSZ/ZipLine.gif")
+	
+	//Zip Line Frames
+	SpriteFrame(-30, -128, 59, 256, 0, 0)
+	SpriteFrame(-49, -64, 98, 128, 120, 0)
+	SpriteFrame(-47, -24, 94, 48, 219, 0)
+	SpriteFrame(-47, -24, 94, 48, 219, 49)
+	SpriteFrame(-49, -64, 98, 128, 120, 128)
+	SpriteFrame(-30, -128, 59, 256, 60, 0)
+end event

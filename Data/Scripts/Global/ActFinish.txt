@@ -1,0 +1,304 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Act Finish
+// Script Author: Twanvanb1
+// ----------------------------------
+
+private alias Object.Value0 : Object.Timer
+
+private alias Object.XPos : Object.LineXPos0
+private alias Object.Value1 : Object.LineXPos1
+private alias Object.Value2 : Object.LineXPos2
+private alias Object.Value3 : Object.LineXPos3
+private alias Object.Value4 : Object.LineXPos4
+private alias Object.Value5 : Object.TimeBonus
+private alias Object.Value6 : Object.RingBonus
+private alias Object.Value7 : Object.Total
+
+event ObjectUpdate
+	options.touchControls = false
+
+	switch stage.playerListPos
+	case PLAYER_SONIC_A
+		EditFrame(20, 0, 0, 74, 19, 355, 1)
+		break
+		
+	case PLAYER_TAILS_A
+		EditFrame(20, 0, 0, 74, 19, 355, 136)
+		break
+		
+	case PLAYER_KNUCKLES_A
+		EditFrame(20, -20, 0, 119, 19, 355, 156)
+		EditFrame(0, 20, 0, 47, 19, 430, 1)
+		break
+		
+	end switch
+	
+	switch Object.State
+	case 0 //Setup the Line X Positions
+		Object.LineXPos0 = -799
+		Object.LineXPos1 = 1129
+		Object.LineXPos2 = 1215
+		Object.LineXPos3 = 1279
+		Object.LineXPos4 = 1363
+		Object.State = 1
+
+		//Setup the Bonuses etc
+		switch Stage.Minutes
+		case 0
+			Object.TimeBonus = 10000
+			break
+		case 1
+			Object.TimeBonus = 4000
+			break
+		case 2
+			Object.TimeBonus = 2000
+			break
+		case 3
+			Object.TimeBonus = 1000
+			break
+		case 4
+			Object.TimeBonus = 500
+			break
+		case 5
+			Object.TimeBonus = 100
+			break
+		end switch
+
+		Object.RingBonus = Object[0].Value0
+		Object.RingBonus *= 100
+
+		Object.Total = 0
+		break
+
+	case 1 //Moving the Text in
+
+		if Object.LineXPos0 < 81
+			Object.LineXPos0 += 16
+		else
+			Object.LineXPos0 = 81
+		end if
+
+		if Object.LineXPos1 > 89
+			Object.LineXPos1 -= 16
+		else
+			Object.LineXPos1 = 89
+		end if
+
+		if Object.LineXPos2 > 63
+			Object.LineXPos2 -= 16
+		else
+			Object.LineXPos2 = 63
+		end if
+
+		if Object.LineXPos3 > 63
+			Object.LineXPos3 -= 16
+		else
+			Object.LineXPos3 = 63
+		end if
+
+		if Object.LineXPos4 > 83
+			Object.LineXPos4 -= 16
+		else
+			Object.LineXPos4 = 83
+			Object.State = 2
+			Object.Timer = 0
+		end if
+
+		break
+
+	case 2	//Wait a bit
+		Object.Timer++
+		if Object.Timer > 299
+			Object.Timer = 0
+			Object.State = 3
+		end if
+		break
+
+	case 3 //Add Everying Up and Kaching!
+
+		if Object.RingBonus > 0
+			Object.RingBonus -= 100
+			Object.Total += 100
+			Player.Score += 100
+		end if
+
+		if Object.TimeBonus > 0
+			Object.TimeBonus -= 100
+			Object.Total += 100
+			Player.Score += 100
+		end if
+
+		CheckGreater(Object.RingBonus, 0)
+		temp0 = CheckResult
+		CheckGreater(Object.TimeBonus, 0)
+		temp0 |= CheckResult
+
+		if temp0 == 1
+			Object.Timer++
+			if Object.Timer == 2
+				PlaySfx(13, false)
+				Object.Timer = 0
+			end if
+		else
+			Object.State = 4
+			Object.Timer = 0
+			PlaySfx(14, false)
+		end if
+
+		break
+
+	case 4	//Wait some More
+		Object.Timer++
+		if Object.Timer == 160
+			Object.Timer = 0
+			Object.State = 5
+		end if
+		break
+
+	case 5	//Fade out and Load Next Stage
+		Object.Timer += 4
+		SetScreenFade(0, 0, 0, object.timer)
+		if Object.Timer == 384
+			Object.Timer = 0
+			Stage.ListPos++
+			starPostID = 0
+
+			if Stage.ListPos < Stage.ListSize
+				LoadStage()
+			else
+				//Back to the Titlescreen
+				Stage.ActiveList = PRESENTATION_STAGE
+				Stage.ListPos = 0
+				LoadStage()
+			end if
+		end if
+		break
+
+	end switch
+
+end event
+
+event ObjectDraw
+	//Draw Sonic Text
+	temp1 = Object.LineXPos0
+	temp1 += screen.xcenter
+	temp1 -= 164
+	DrawSpriteScreenXY(20, temp1, 63)
+
+	//Draw Got Text
+	temp0 =  Object.LineXPos0
+	temp0 +=  screen.xcenter
+	temp0 += -79
+	DrawSpriteScreenXY(0, temp0, 63)
+
+	//Draw Through Text
+	temp0 = Object.LineXPos1
+	temp0 +=  screen.xcenter
+	temp0 -= 164
+	DrawSpriteScreenXY(4, temp0, 83)
+
+	//Draw Zone Text
+	temp0 = Object.LineXPos1
+	temp0 +=  screen.xcenter
+	temp0 += -48
+	DrawSpriteScreenXY(5, temp0, 95)
+
+	//Draw Act No
+	temp0 += 38
+	DrawSpriteScreenXY(Stage.ActNum, temp0, 73)
+
+	//Draw Time Text
+	temp0 = Object.LineXPos2
+	temp0 +=  screen.xcenter
+	temp0 += -160
+	DrawSpriteScreenXY(6, temp0, 120)
+
+	//Draw Bonus Text
+	temp0 = Object.LineXPos2
+	temp0 +=  screen.xcenter
+	temp0 += -120
+	DrawSpriteScreenXY(8, temp0, 120)
+
+	//Draw Time Bonus
+	temp0 += 144
+	DrawNumbers(10, temp0, 120, Object.TimeBonus, 5, 8, 0)
+
+	//Draw Ring Text
+	temp0 = Object.LineXPos3
+	temp0 +=  screen.xcenter
+	temp0 += -160
+	DrawSpriteScreenXY(7, temp0, 136)
+
+	//Draw Bonus Text
+	temp0 = Object.LineXPos3
+	temp0 +=  screen.xcenter
+	temp0 += -120
+	DrawSpriteScreenXY(8, temp0, 136)
+
+	//Draw Ring Bonus
+	temp0+=144
+	DrawNumbers(10, temp0, 136, Object.RingBonus, 5, 8, 0)
+
+	//Draw Total Text
+	temp0 = Object.LineXPos4
+	temp0 +=  screen.xcenter
+	temp0 += -160
+	DrawSpriteScreenXY(9, temp0, 164)
+
+	//Draw Total
+	temp0 += 164
+	DrawNumbers(10, temp0, 164, Object.Total, 5, 8, 0)
+
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Display.gif")
+
+	//Got Text
+	SpriteFrame(0, 0, 47, 19, 430, 1)
+
+	//Numbers 1-3
+	SpriteFrame(0, 0, 14, 37, 355, 41)
+	SpriteFrame(0, 0, 20, 37, 370, 41)
+	SpriteFrame(0, 0, 20, 37, 391, 41)
+
+	//Through Text
+	SpriteFrame(0, 0, 112, 19, 355, 21)
+
+	//Zone Text
+	SpriteFrame(0, 0, 36, 13, 140, 221)
+
+	//Time Text
+	SpriteFrame(0, 0, 33, 13, 131, 319)
+
+	//Ring Text
+	SpriteFrame(0, 0, 33, 13, 131, 333)
+
+	//Bonus Text
+	SpriteFrame(0, 0, 43, 13, 412, 41)
+
+	//Total Text
+	SpriteFrame(0, 0, 40, 13, 412, 55)
+
+	//Numbers 0-9
+	SpriteFrame(0, 0, 9, 13, 173, 305)
+	SpriteFrame(0, 0, 9, 13, 173, 319)
+	SpriteFrame(0, 0, 9, 13, 173, 333)
+	SpriteFrame(0, 0, 9, 13, 173, 347)
+	SpriteFrame(0, 0, 9, 13, 173, 361)
+	SpriteFrame(0, 0, 9, 13, 183, 305)
+	SpriteFrame(0, 0, 9, 13, 183, 319)
+	SpriteFrame(0, 0, 9, 13, 183, 333)
+	SpriteFrame(0, 0, 9, 13, 183, 347)
+	SpriteFrame(0, 0, 9, 13, 183, 361)
+
+	//Sonic Text
+	SpriteFrame(0, 0, 74, 19, 355, 1)
+
+end event
+
+sub RSDK
+	LoadSpriteSheet("NexusGlobals/Display.gif")
+	SetEditorIcon(Icon0,SingleIcon,-15,-15,30,30,193,347)
+end sub

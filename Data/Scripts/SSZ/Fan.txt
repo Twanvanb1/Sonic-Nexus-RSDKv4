@@ -1,0 +1,82 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexusv4
+// Script Description:    Fan Object 
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+
+// ========================
+// Aliases
+// ========================
+
+private alias 35 : TYPE_FAN
+
+private alias object.value0 : object.AnimationTimer
+
+// Player Alias
+private alias object.yvel			 :	player.yvel
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	object.AnimationTimer++
+	if object.AnimationTimer == 2
+		object.AnimationTimer = 0
+		object.Frame++
+		if object.Frame >= 5
+			object.Frame = 0
+		end if
+	end if
+
+	ArrayPos0 = object[0].EntityPos
+	if Object[ArrayPos0].animation == ANI_HANGING
+		foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+			BoxCollisionTest(C_TOUCH, object.entityPos, -32, -480, 32, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if checkResult == 1
+				if object[0].yvel >- 0x80000
+					object[0].yvel -= 0x6000
+				end if
+			end if
+		next
+	end if
+end event
+
+event ObjectDraw
+	DrawSprite(Object.Frame)
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Fan Frames
+	SpriteFrame(-14, -8, 26, 16, 148, 59)
+	SpriteFrame(-11, -8, 20, 16, 175, 59)
+	SpriteFrame(-6, -8, 14, 16, 196, 59)
+	SpriteFrame(-7, -8, 20, 16, 211, 59)
+	SpriteFrame(-10, -8, 26, 16, 148, 76)
+
+	//Setup any fans that are
+	//present in the level
+	
+	foreach (TypeName[Fan], arrayPos0, ALL_ENTITIES)
+	    Object[ArrayPos0].DrawOrder = 4
+	next
+
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+    DrawSprite(0)
+end event
+
+event RSDKLoad
+    LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Fan Frames
+	SpriteFrame(-14, -8, 26, 16, 148, 59)
+end event

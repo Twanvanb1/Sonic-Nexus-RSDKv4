@@ -1,0 +1,63 @@
+// ----------------------------------
+// RSDK Project: Sonic 2
+// Script Description: Explosion Object
+// Script Author: Christian Whitehead/Simon Thomley
+// Unpacked by Rubberduckycooly's script unpacker
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias object.value0 : object.timer
+
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	object.timer++
+	if object.timer > 5
+		object.timer = 0
+		object.frame++
+		if object.frame > 4
+			object.type = TypeName[Blank Object]
+			object.frame = 0
+		end if
+	end if
+end event
+
+
+event ObjectDraw
+	DrawSprite(object.frame)
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Items2.gif")
+
+	// Explosion frames
+	SpriteFrame(-9, -8, 18, 16, 1, 1)
+	SpriteFrame(-16, -16, 32, 32, 83, 66)
+	SpriteFrame(-16, -16, 32, 32, 116, 66)
+	SpriteFrame(-19, -19, 38, 38, 1, 157)
+	SpriteFrame(-19, -19, 38, 38, 40, 157)
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Items2.gif")
+	SpriteFrame(-16, -16, 32, 32, 149, 66)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

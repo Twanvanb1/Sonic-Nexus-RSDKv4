@@ -1,0 +1,198 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexusv4
+// Script Description:    Hell-i-bomber Badnik
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias Object.value2 : Object.DestX
+private alias Object.Value3 : Object.Timer
+private alias Object.Value4 : Object.Blades
+
+private alias 30 : TYPE_HBOMBER
+
+private alias object.ypos			 :	player.ypos
+private alias object.xpos			 :	player.xpos
+
+reserve function HeliBomber_DebugDraw
+reserve function HeliBomber_DebugSpawn
+
+// ========================
+// Function Definitions
+// ========================
+
+private function HeliBomber_DebugDraw
+	DrawSprite(0)
+	DrawSprite(2)
+end function
+
+
+private function HeliBomber_DebugSpawn
+	CreateTempObject(TypeName[Helli Bomber], 0, object.xpos, object.ypos)
+end function
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	switch Object.State
+	case 0
+		Object.Frame = 0
+		break
+	case 1
+		Object.Frame = 0
+		object.xvel = Object.DestX
+		object.xvel -= Object.XPos
+		object.xvel >>= 5
+
+		temp0 = Object.DestX
+		temp1 = Object.XPos
+		temp0 >>= 19
+		temp1 >>= 19
+		if temp0 == temp1
+			Object.State = 2
+			Object.Timer = 0
+		end if
+
+		if object.xvel > 0
+			Object.Direction = FLIP_X
+		else
+			Object.Direction = FLIP_NONE
+		end if
+
+		break
+	case 2
+		Object.Frame = 0
+		Object.Timer++
+		if Object.Timer == 15
+			Object.State = 3
+		end if
+		break
+	case 3
+		Object.Frame = 1
+		Object.Timer++
+
+		if Object.Timer == 90
+			createTempObject(TypeName[Bullet], 0, Object.xpos, Object.ypos)
+			if Object.Direction == FLIP_X
+				Object[TempObjectPos].xpos += 0x80000
+			else
+				Object[TempObjectPos].xpos -= 0x80000
+			end if
+
+			Object[TempObjectPos].YPos += 1179648
+
+			Object[TempObjectPos].xvel = Player[0].xpos
+			Object[TempObjectPos].xvel -= Object[TempObjectPos].xpos
+			Object[TempObjectPos].xvel /= 48
+
+			Object[TempObjectPos].yvel = Player[0].ypos
+			Object[TempObjectPos].yvel -= Object[TempObjectPos].ypos
+			Object[TempObjectPos].yvel /= 48
+
+			if Object[TempObjectPos].yvel < 0
+				FlipSign(Object[TempObjectPos].yvel)
+			end if
+		end if
+
+		if Object.Timer == 120
+			Object.State = 0
+		end if
+		break
+	end switch
+
+
+	temp0 = Oscillation
+	temp0 <<= 2
+	Sin(object.yvel, temp0)
+
+	object.yvel <<= 6
+
+	Object.XPos += object.xvel
+	Object.YPos += object.yvel
+
+    switch Object.State
+	case 0
+        foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+            BoxCollisionTest(C_TOUCH, object.entityPos, -128, -256, 128, 256, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+            if checkResult == true
+                Object.DestX = object[0].XPos
+                if object[0].XPos > Object.XPos
+                    Object.DestX += 6291456
+                else
+                    Object.DestX -= 6291456
+                end if
+
+                Object.State = 1
+            end if
+        next
+		break
+	case 2
+	case 3
+		if Object.XPos < object[0].XPos
+			Object.Direction = FLIP_X
+		else
+			Object.Direction = FLIP_NONE
+		end if
+		break
+	end switch
+
+    foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		BoxCollisionTest(C_TOUCH, object.entityPos, -22, -8, 22, 8, currentPlayer, object[currentPlayer].value40, object[currentPlayer].value38, object[currentPlayer].value41, object[currentPlayer].value39)
+		if checkResult == 1
+			CallFunction(Player_BadnikBreak)
+		end if
+	next   
+end event
+
+
+event ObjectDraw
+	DrawSpriteFX(Object.Frame, FX_FLIP, Object.xpos, object.ypos)
+
+	temp0 = Object.Blades
+	temp0 >>= 1
+	temp0 += 2
+	DrawSprite(temp0)
+	Object.Blades++
+	if Object.Blades > 3
+		Object.Blades = 0
+	end if
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	
+	//HBomber Moving Frames
+	SpriteFrame(-24,-10,47,19,52,1)
+
+	//HBomber Shooting Frames
+	SpriteFrame(-24,-10,30,29,52,59)
+
+	//Heli-blades
+	SpriteFrame(-16,-18,32,8,52,41)
+	SpriteFrame(-16,-18,32,8,52,50)
+
+	SetTableValue(TypeName[Helli Bomber], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(HeliBomber_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(HeliBomber_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
+	
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+	DrawSprite(1)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/objects.gif")
+	//HBomber Moving Frames
+	SpriteFrame(-24, -10, 47, 19, 52, 1)
+	SpriteFrame(-16, -18, 32, 8, 52, 41)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,0 +1,81 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Fade Up Script
+// Script Author: Twanvanb1
+// ----------------------------------
+
+private alias object.value0 : object.Timer
+private alias object.value1 : object.Unknown
+
+event ObjectUpdate
+	switch Object.State
+	case 0 //Initialise
+		LoadPalette("NexusTitle.act", 0, 0, 0, 256)
+		Object.State = 1
+		Object.Timer = 896
+		Object.value1 = 512
+
+		if Object[1].PropertyValue == 1
+			SetScreenFade(0xFF, 0xFF, 0xFF, 0xFF)
+		else
+			SetScreenFade(0x00, 0x00, 0x00, 0xFF)
+		end if
+
+		break
+		
+	case 1 //Fade from White
+		if Object.Timer > 0
+			Object.Timer -= 4
+		else
+			ResetObjectEntity(Object.EntityPos, 5, 0, 0,0)
+			ArrayPos0 = Object.EntityPos
+			temp0 = screen.xcenter
+			Object[ArrayPos0].iXPos = temp0
+			Object[ArrayPos0].iYPos = 200
+		end if
+
+		if Object.value1 > 0
+			Object.value1 -= 4
+		end if
+
+		if Object.Timer == 128
+			PlayMusic(0)
+		end if
+
+		SetScreenFade(0x00, 0x00, 0x00, Object.Timer)
+		SetScreenFade(0xFF, 0xFF, 0xFF, Object.value1)
+		break
+		
+	end switch
+end event
+
+event ObjectStartup
+	Object.State = 2
+	Object[1].Type = 3
+	temp0 = screen.xcenter
+	Object[1].iXPos = temp0
+	Object[1].Priority = 1
+
+	Object[1].PropertyValue = 1
+
+	if Object[1].PropertyValue == 1
+		Object[1].iYPos = 108
+		Object[1].Scale = 2048
+		Object[1].value1 = -24
+	else
+		Object[1].iYPos = -320
+	end if
+
+	//Setup the any FadeUp
+	//Objects that are present in the level
+	foreach (TypeName[FadeUp], arrayPos0, ALL_ENTITIES)
+		Object[ArrayPos0].Priority = 1
+	next
+	
+	SetMusicTrack("Nexus/TitleScreen.ogg", 0, false)
+end event
+
+event RSDK
+	LoadSpriteSheet("NexusTitle/Menu.gif")
+	SetEditorIcon(Icon1, 0, -10, -10, 21, 21, 43, 0)
+end event

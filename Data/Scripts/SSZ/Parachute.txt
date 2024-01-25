@@ -1,0 +1,274 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    Parachute Object 
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+
+// ========================
+// Aliases
+// ========================
+
+// Parachute states
+private alias 0 : PARACHUTE_IDLE
+private alias 1 : PARACHUTE_PLAYER_HANGING
+private alias 2 : PARACHUTE_PLAYER_LEFT
+private alias 3 : PARACHUTE_OUT_OF_BOUNDS
+
+//Parachute Aliases
+private alias Object.Value0 : Object.PlayerNo
+private alias Object.Value1 : Object.StartX
+private alias Object.Value2 : Object.StartY
+
+// Player List Pos Aliases
+// The A at the end of each of these stands for Alias, Origins Plus introduced global variables for player slots but we need to support Standalone too
+// Also switch cases don't support variables so we have to do this either way
+public alias 0 : PLAYER_SONIC_A
+public alias 1 : PLAYER_TAILS_A
+public alias 2 : PLAYER_KNUCKLES_A
+public alias 3 : PLAYER_SONIC_TAILS_A
+
+//Player Aliases
+private alias Object.xpos 			: player.xpos
+private alias Object.ypos 			: player.ypos
+private alias Object.xvel			: player.xvel
+private alias Object.yvel 			: player.yvel
+private alias Object.entityPos		: player.entityPos
+private alias Object.animation 		: player.animation
+private alias Object.left 			: player.left
+private alias Object.right 			: player.right
+private alias Object.direction 		: player.direction
+private alias Object.speed 			: player.speed
+private alias Object.collisionTop 	: player.collisionTop
+private alias Object.state 			: player.state
+private alias Object.gravity 		: player.gravity
+private alias Object.jumpPress 		: player.jumpPress
+
+event ObjectUpdate
+	switch Object.State
+	case PARACHUTE_PLAYER_HANGING
+		player[0].EntityPos = Object.PlayerNo
+		player[0].Animation = ANI_HANGING
+		player[0].State = Player_State_Air
+
+		if player[0].Left == true
+			player[0].Direction = FACING_LEFT
+		end if
+		
+		if player[0].Right == true
+			player[0].Direction = FACING_RIGHT
+		end if
+
+		if player[0].Direction == FACING_RIGHT
+			if player[0].Speed < -0x30000
+				player[0].Speed *= 0x68
+				player[0].Speed >>= 7
+			end if
+
+			if player[0].Speed > 0x30000
+				player[0].Speed *= 0x68
+				player[0].Speed >>= 7
+				if player[0].Speed < 0x30000
+					player[0].Speed = 0x30000
+				end if
+			else
+				player[0].Speed += 0x1000
+				if player[0].Speed > 0x30000
+					player[0].Speed = 0x30000
+				end if
+			end if
+		else
+			if player[0].Speed > 0x30000
+				player[0].Speed *= 0x68
+				player[0].Speed >>= 7
+			end if
+
+			if player[0].Speed < -0x30000
+				player[0].Speed *= 0x68
+				player[0].Speed >>= 7
+				if player[0].Speed > -0x30000
+					player[0].Speed = -0x30000
+				end if
+			else
+				player[0].Speed -= 0x1000
+				if player[0].Speed < -0x30000
+					player[0].Speed = -0x30000
+				end if
+			end if
+
+		end if
+
+		player[0].XVel = player[0].Speed
+		Object.XPos = player[0].XPos
+		Object.YPos = player[0].YPos
+		switch stage.playerListPos
+			case PLAYER_SONIC_TAILS_A
+			case PLAYER_SONIC_A
+				temp0 = player[0].CollisionTop
+				temp0 -= 22
+				temp0 <<= 16
+				break
+			case PLAYER_TAILS_A
+				temp0 = player[0].CollisionTop
+				temp0 -= 18
+				temp0 <<= 16
+				break
+			case PLAYER_KNUCKLES_A
+				temp0 = player[0].CollisionTop
+				temp0 -= 19
+				temp0 <<= 16
+				break
+		end switch
+		Object.YPos += temp0
+
+		if player[0].yvel > 0x8000
+			Object[0].YVel -= 0x3600
+		end if
+
+		if player[0].State == Player_State_Hurt
+			Object.Priority = 1
+			Object.State = 2
+			ArrayPos0 = Object.PlayerNo
+			Object[ArrayPos0].PropertyValue = 0
+			Object.XVel = player[0].XVel
+		end if
+
+		if player[0].Gravity == false
+			Object.Priority = 1
+			Object.State = 2
+			ArrayPos0 = Object.PlayerNo
+			Object[ArrayPos0].PropertyValue = 0
+			Object.XVel = player[0].XVel
+		else
+			Object.YVel = player[0].YVel
+		end if
+
+		if player[0].JumpPress == true
+			PlaySfx(0, false)
+			player[0].State = Player_State_Air
+			player[0].Animation = ANI_JUMPING
+			player[0].YVel = -0x40000
+			player[0].Gravity = true
+
+			Object.Priority = 1
+			Object.State = 2
+			ArrayPos0 = Object.PlayerNo
+			Object[ArrayPos0].PropertyValue = 0
+			Object.XVel = player[0].XVel
+		end if
+
+		break
+	case PARACHUTE_PLAYER_LEFT
+		if Object.YVel < 0x10000
+			Object.YVel -= -0x2000
+		end if
+
+		Object.XPos += Object.XVel
+		Object.YPos += Object.YVel
+
+		if Object.OutOfBounds == true
+			Object.State = 3
+			Object.XPos = Object.StartX
+			Object.YPos = Object.StartY
+		end if
+		break
+
+	case PARACHUTE_OUT_OF_BOUNDS
+		if Object.OutOfBounds == true
+			Object.State = 0
+			Object.Priority = 0
+		end if
+		break
+	end switch
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		BoxCollisionTest(C_TOUCH, object.entityPos, -16, 20, 16, 24, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if checkResult == true
+				if Object.State == PARACHUTE_IDLE
+					Object.StartX = Object.XPos
+					Object.StartY = Object.YPos
+
+					Object.PlayerNo = player[0].EntityPos
+					ArrayPos0 = player[0].EntityPos
+					Object[ArrayPos0].PropertyValue = 1
+					player[0].yvel -= 0x3000
+					player[0].Animation = ANI_HANGING
+					Object.XPos = player[0].XPos
+					Object.YPos = player[0].YPos
+					switch stage.playerListPos
+						case PLAYER_SONIC_TAILS_A
+						case PLAYER_SONIC_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 22
+							temp0 <<= 16
+							break
+						case PLAYER_TAILS_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 18
+							temp0 <<= 16
+							break
+						case PLAYER_KNUCKLES_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 19
+							temp0 <<= 16
+							break
+					end switch
+					player[0].Speed = player[0].XVel
+					Object.YPos += temp0
+					Object.State = 1
+					player[0].YVel = 0
+					player[0].Gravity = true
+					player[0].Gravity = GRAVITY_GROUND
+					PlaySfx(SFXName[Catch], false)
+				end if
+			end if
+	next
+end event
+
+event ObjectDraw
+	switch Object.State
+	case PARACHUTE_IDLE
+		DrawSprite(0)
+		break
+	case PARACHUTE_PLAYER_HANGING
+	case PARACHUTE_PLAYER_LEFT
+		temp0 = Object.Frame
+		temp0 >>= 3
+		DrawSprite(temp0)
+		Object.Frame++
+		if Object.Frame > 63
+			Object.Frame = 0
+		end if
+		DrawSprite(temp0)
+		break
+	end switch
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Parachute Frames
+	SpriteFrame(-24,-20,48,43,98,133)
+	SpriteFrame(-19,-20,48,43,147,133)
+	SpriteFrame(-15,-20,48,43,196,133)
+	SpriteFrame(-19,-20,48,43,147,133)
+	SpriteFrame(-24,-20,48,43,98,133)
+	SpriteFrame(-29,-20,48,43,49,133)
+	SpriteFrame(-34,-20,47,43,1,133)
+	SpriteFrame(-29,-20,48,43,49,133)
+	
+end event
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Parachute Frames
+	SpriteFrame(-24,-20,48,43,98,133)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

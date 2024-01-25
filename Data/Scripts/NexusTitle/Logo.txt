@@ -1,0 +1,173 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Logo Script
+// Script Author: Taxman
+// Script Porter: Twanvanb1
+// ----------------------------------
+
+private alias Object.Value0 : Object.YSpeed
+private alias Object.Value1 : Object.ScaleSpeed
+private alias Object.Value3 : SonicBlink
+private alias Object.Value4 : TailsBlink
+
+event ObjectUpdate
+	
+	switch Object.PropertyValue
+	case 0
+		if Object.State < 4
+
+			Object.YSpeed += 16384
+			Object.YPos += Object.YSpeed
+
+			if Object.YPos > 7077888
+				Object.YPos = 7077888
+				Object.YSpeed >>= 1
+				FlipSign(Object.YSpeed)
+				Object.State++
+			end if
+		end if
+		break
+
+	case 1
+		if Object.State < 4
+			Object.ScaleSpeed -= 2
+			Object[1].Scale += Object.ScaleSpeed
+
+			if Object.Scale < 512
+				Object.Scale = 512
+				Object.ScaleSpeed >>= 1
+				FlipSign(Object.ScaleSpeed)
+				PlaySfx(SfxName[Land], false)
+				Object.State++
+			end if
+		else
+			Object.Value2++
+			if Object.Value2 > 127
+				Object.Value2 = 0
+				Object.PropertyValue = 2
+				Rand(SonicBlink, 256)
+				SonicBlink += 19
+
+				Rand(TailsBlink,256)
+				TailsBlink += 34
+			end if
+		end if
+		break
+	end switch
+
+end event
+
+event ObjectDraw
+	if Object.PropertyValue == 1
+		DrawSpriteFX(0, FX_SCALE, object.xpos, Object.YPos)
+	else
+		Object.Value2 += 8
+		if Object.Value2 > 511
+			Object.Value2 -= 512
+		end if
+
+		Sin(Object.Rotation, Object.Value2)
+		Object.Rotation >>= 4
+
+		temp1 = screen.ycenter
+		temp1 -= 12
+		DrawSpriteScreenXY(1, screen.xcenter, temp1)
+		DrawSpriteScreenXY(2, screen.xcenter, temp1)
+
+		temp0 = screen.xcenter
+		temp0 -= 52
+		DrawSpriteScreenFX(3, FX_ROTATE, temp0, 95)
+
+		SonicBlink--
+
+		if SonicBlink > 3
+			if SonicBlink < 19
+				temp0 = screen.xcenter
+				temp0 -= 43
+				DrawSpriteScreenXY(SonicBlink, temp0, 52)
+			end if
+		end if
+
+		if SonicBlink == 4
+			Rand(SonicBlink, 256)
+			SonicBlink += 19
+		end if
+
+		TailsBlink--
+
+		if TailsBlink > 18
+			if TailsBlink < 34
+				temp0 = screen.xcenter
+				temp0 += 15
+				DrawSpriteScreenXY(TailsBlink, temp0, 60)
+			end if
+		end if
+
+		if TailsBlink == 19
+			Rand(TailsBlink, 256)
+			TailsBlink += 34
+		end if
+	end if
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("NexusTitle/Logo.gif")
+	
+	SpriteFrame(-128, -80, 256, 160, 0, 0)
+
+	//Logo Left
+	SpriteFrame(-128,-80,128,160,128,160)
+	//Logo Right
+	SpriteFrame(0,-80,128,160,128,0)
+
+	//Waving Finger
+	SpriteFrame(-56,-60,60,65,1,161)
+
+	//Sonic Blinking
+	SpriteFrame(0,0,42,31,62,161)
+	SpriteFrame(0,0,42,31,62,161)
+	SpriteFrame(0,0,42,31,62,161)
+
+	SpriteFrame(0,0,42,31,62,193)
+	SpriteFrame(0,0,42,31,62,193)
+	SpriteFrame(0,0,42,31,62,193)
+
+	SpriteFrame(0,0,42,31,62,225)
+	SpriteFrame(0,0,42,31,62,225)
+	SpriteFrame(0,0,42,31,62,225)
+
+	SpriteFrame(0,0,42,31,62,193)
+	SpriteFrame(0,0,42,31,62,193)
+	SpriteFrame(0,0,42,31,62,193)
+	
+	SpriteFrame(0,0,42,31,62,161)
+	SpriteFrame(0,0,42,31,62,161)
+	SpriteFrame(0,0,42,31,62,161)
+
+	//Tails Blinking
+	SpriteFrame(0,0,27,22,1,227)
+	SpriteFrame(0,0,27,22,1,227)
+	SpriteFrame(0,0,27,22,1,227)
+
+	SpriteFrame(0,0,27,22,1,250)
+	SpriteFrame(0,0,27,22,1,250)
+	SpriteFrame(0,0,27,22,1,250)
+
+	SpriteFrame(0,0,27,22,1,273)
+	SpriteFrame(0,0,27,22,1,273)
+	SpriteFrame(0,0,27,22,1,273)
+
+	SpriteFrame(0,0,27,22,1,250)
+	SpriteFrame(0,0,27,22,1,250)
+	SpriteFrame(0,0,27,22,1,250)
+
+	SpriteFrame(0,0,27,22,1,227)
+	SpriteFrame(0,0,27,22,1,227)
+	SpriteFrame(0,0,27,22,1,227)
+	
+end event
+
+event RSDK
+	LoadSpriteSheet("NexusTitle/Logo.gif")
+	SetEditorIcon(Icon1,0,-128,-80,256,160,0,0)
+end event

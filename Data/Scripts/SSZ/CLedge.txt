@@ -1,0 +1,252 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    Crumbling Ledge
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias Object.Value0 : LedgeLeft
+private alias Object.Value1 : LedgeRight
+private alias Object.Value2 : Object.Timer
+private alias Object.Value3 : NoBlocks
+private alias Object.Value4 : Object.YVelocity
+
+private alias 38 : TYPE_CLEDGE
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+
+	switch Object.State
+	case 1	//Wait Right Side
+		if Object.Timer > 0
+			Object.Timer--
+		else
+			PlaySfx(SfxName[Crumble],false)
+			Object.State = 4
+		end if
+		break
+
+	case 2	//Wait Left Side
+		if Object.Timer > 0
+			Object.Timer--
+		else
+			PlaySfx(SfxName[Crumble],false)
+			Object.State = 3
+		end if
+		break
+
+	case 3	//Crumble from Left Side
+		Object.Timer++
+		if Object.Timer == 6
+			Object.Timer = 0
+			if LedgeLeft < LedgeRight
+				NoBlocks--
+				LedgeLeft += 16
+
+				temp0 = LedgeLeft
+				temp0 -= 8
+				temp0 <<= 16
+				temp0 += Object.XPos
+				temp1 = Object.YPos
+				temp1 -= 655360
+				CreateTempObject(TypeName[CLedge], 0, temp0, temp1)
+
+				Object[tempObjectPos].State = 6
+				Object[tempObjectPos].YVel =- 65536
+				Object[tempObjectPos].Frame = 1
+				temp1 += 1310720
+				CreateTempObject(TypeName[CLedge], 0, temp0, temp1)
+				Object[TempObjectPos].State = 6
+				Object[TempObjectPos].Frame = 2
+			else
+				Object.State = 5
+				Object.Priority = 1
+			end if
+		end if
+		break
+
+	case 4	//Crumble from Right Side
+		Object.Timer++
+		if Object.Timer == 6
+			Object.Timer = 0
+			if LedgeRight > LedgeLeft
+				NoBlocks--
+				LedgeRight -= 16
+
+				temp0 = LedgeRight
+				temp0 += 8
+				temp0 <<= 16
+				temp0 += Object.XPos
+				temp1 = Object.YPos
+				temp1 -= 655360
+				CreateTempObject(TypeName[CLedge], 0, temp0, temp1)
+				Object[TempObjectPos].State = 6
+				Object[TempObjectPos].YVel =- 65536
+				Object[TempObjectPos].Frame = 1
+				temp1 += 1310720
+				CreateTempObject(TypeName[CLedge], 0, temp0, temp1)
+				Object[TempObjectPos].State = 6
+				Object[TempObjectPos].Frame = 2
+			else
+				Object.State = 5
+				Object.Priority = 1
+			end if
+		end if
+		break
+
+	case 5 //Wait for Respawn
+		if Object.OutOfBounds == true
+			Object.State = 0
+			NoBlocks = Object.PropertyValue
+			LedgeLeft = Object.PropertyValue
+			LedgeLeft <<= 3
+			LedgeRight = LedgeLeft
+			FlipSign(LedgeLeft)
+			Object.Priority = 0
+			Object.Timer = 0
+		end if
+		break
+
+	case 6 //Falling Block
+		Object.YVel += 16384
+		if Object.YVel > 0
+			Object.YPos += Object.YVel
+		end if
+		
+		if Object.OutOfBounds == true
+			Object.Type = 0
+		end if
+		break
+
+	end switch
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)	
+		if Object.State == 0
+			BoxCollisionTest(C_PLATFORM, object.entityPos, LedgeLeft, -16, LedgeRight, 16, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if CheckResult == true
+				Object.Timer = 15
+				Object.Priority = 1
+				if Object[0].XPos > Object.XPos
+					Object.State = 1
+				else
+					Object.State = 2
+				end if
+			end if
+		else
+			BoxCollisionTest(C_PLATFORM, object.entityPos, LedgeLeft, -16, LedgeRight, 16, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		end if
+	next 
+end event
+
+event ObjectDraw
+
+	switch Object.State
+	case 0
+	case 1
+	case 2
+	case 4
+		temp0 = 0
+		temp1 = LedgeLeft
+		temp1 <<= 16
+		temp1 += 524288
+		temp1 += Object.XPos
+
+		while temp0 < NoBlocks
+			DrawSpriteXY(0, temp1, Object.YPos)
+			temp0++
+			temp1 += 1048576
+		loop
+		break
+	case 3
+		temp0 = 0
+		temp1 = LedgeRight
+		temp1 <<= 16
+		temp1 -= 524288
+		temp1 += Object.XPos
+
+		while temp0 < NoBlocks
+			DrawSpriteXY(0, temp1, Object.YPos)
+			temp0++
+			temp1 -= 1048576
+		loop
+		break
+
+	case 6
+		DrawSprite(Object.Frame)
+		break
+	end switch
+
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/Objects.gif")
+
+	//Setup the Ledge sizes for any Crumbling Ledge
+	//Objects that are present in the level
+
+	//Ledge Frame
+	SpriteFrame(-8, -20, 16, 40, 219, 18)
+
+	//Broken Ledge Frames
+	SpriteFrame(-8, -10, 16, 20, 219, 18)
+	SpriteFrame(-8, -10, 16, 20, 219, 38)
+
+	foreach (TypeName[CLedge], arrayPos0, ALL_ENTITIES)
+	    NoBlocks[ArrayPos0] = Object[ArrayPos0].PropertyValue
+		LedgeLeft[ArrayPos0] = Object[ArrayPos0].PropertyValue
+		LedgeLeft[ArrayPos0] <<= 3
+		LedgeRight[ArrayPos0] = LedgeLeft[ArrayPos0]
+		FlipSign(LedgeLeft[ArrayPos0])
+	next
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKEdit
+	if Editor.ReturnVariable == true
+		switch Editor.VariableID
+		case EDIT_VAR_PROPVAL // Property Value
+		case 0 // BlocksNo
+			CheckResult = Object.PropertyValue
+			break
+		end switch
+	else
+		switch Editor.VariableID
+		case EDIT_VAR_PROPVAL // Property Value
+		case 0 // BlocksNo
+			Object.PropertyValue = Editor.VariableValue
+			break
+		end switch
+	end if
+end event
+
+event RSDKDraw
+	temp0 = 0
+	temp1 = Object.propertyValue
+	temp1 <<= 19
+	temp1 -= 0x80000
+	temp1 += Object.xpos
+	while temp0 < Object.propertyValue
+		DrawSpriteXY(0, temp1, Object.ypos)
+		temp0++
+		temp1 -= 0x100000
+	loop
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
+	
+	//Ledge Frame
+	SpriteFrame(-8, -20, 16, 40, 219, 18)
+
+	AddEditorVariable("BlocksNo")
+	SetActiveVariable("BlocksNo")
+end event

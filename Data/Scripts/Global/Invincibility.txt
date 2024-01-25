@@ -1,0 +1,100 @@
+// ----------------------------------
+// RSDK Project: Sonic Nexus v4
+// Script Description: Invincibility Object
+// Script Author: Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias object.value0 : object.timer
+
+private alias -1 : DRAWORDER_PLAYER
+private alias object.xpos : player.xpos
+private alias object.ypos : player.ypos
+
+private alias 0 : INVINCIBILITY_SPAWNER
+private alias 1 : INVINCIBILITY_SPARKLES
+
+// Player Aliases
+private alias object.value18 : player.sortedDrawOrder
+
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	object.frame = ringFrame
+	object.frame &= 3
+
+	switch object.state
+	case INVINCIBILITY_SPAWNER
+		object.timer++
+			if object.timer > 3
+				object.timer = 0
+				CreateTempObject(Typename[Invincibility], 0, player[0].xpos, player[0].ypos)
+				object[TempObjectPos].state = 1
+				object[TempObjectPos].draworder = player[0].sortedDrawOrder
+
+	
+			end if
+		break
+	
+	case INVINCIBILITY_SPARKLES
+		if object.timer > 5
+			object.inkEffect = FX_ROTATE
+		else 
+			object.inkEffect = FX_SCALE
+		end if
+
+		object.timer++
+
+		if object.timer > 15
+			Object.type = TypeName[Blank Object]
+		end if
+
+		break
+	end switch
+end event
+
+event ObjectDraw
+	switch object.state
+	case INVINCIBILITY_SPAWNER
+		DrawSpriteXY(object.frame, player[currentPlayer].xpos, player[currentPlayer].ypos)
+		break
+	
+	case INVINCIBILITY_SPARKLES
+		DrawSpriteFX(object.frame, FX_INK, object.xpos, object.ypos)
+		break
+	end switch
+end event
+
+
+event ObjectStartup
+	LoadSpriteSheet("Global/Shield.gif")
+	
+	//Invincibility Star Frames
+	SpriteFrame(-24, -24, 48, 48, 99, 1)
+	SpriteFrame(-24, -24, 48, 48, 99, 50)
+	SpriteFrame(-24, -24, 48, 48, 99, 99)
+	SpriteFrame(-24, -24, 48, 48, 99, 148)
+end event
+
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Shield.gif")
+	SpriteFrame(-24, -24, 48, 48, 149, 260)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

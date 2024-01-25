@@ -1,0 +1,80 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    Hell-i-bomber Bullet
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+// ========================
+// Function Declarations
+// ========================
+
+// ========================
+// Static Values
+// ========================
+
+// ========================
+// Tables
+// ========================
+
+// ========================
+// Function Definitions
+// ========================
+
+// ========================
+// Events
+// ========================
+
+event Objectupdate
+	object.xpos += Object.xvel
+	object.ypos += Object.yvel
+
+	if object.outOfBounds == true
+		object.type = TypeName[Blank Object]
+	end if
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		BoxCollisionTest(C_TOUCH, object.entityPos, -4, -4, 4, 4, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if checkResult == true
+				CallFunction(Player_ProjectileHit)
+			end if
+	next
+end event
+
+event ObjectDraw
+	temp0 = Object.Frame
+	temp0 >> =2
+	DrawSprite(temp0)
+	Object.Frame++
+
+	if Object.Frame > 7
+		Object.Frame = 0
+	end if
+end event
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/objects.gif")
+	
+	//Bullet Frames
+	SpriteFrame(-4, -4, 8, 8, 85, 41)
+	SpriteFrame(-4, -4, 8, 8, 85, 50)
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/objects.gif")
+	//Bullet Frames
+	SpriteFrame(-4, -4, 8, 8, 85, 41)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -1,0 +1,208 @@
+// ----------------------------------
+// RSDK Project:          Sonic Nexus v4
+// Script Description:    SSZ Swinging Platform
+// Script Author:         Twanvanb1
+// ----------------------------------
+
+// ========================
+// Aliases
+// ========================
+
+private alias 24 : TYPE_SWINGPLAT
+
+private alias Object.Value0 : Object.Angle
+private alias Object.Value1 : Object.PlatformX
+private alias Object.Value2 : Object.PlatformY
+private alias Object.Value3 : Object.ChangeX
+private alias Object.Value4 : Object.ChangeY
+
+// ========================
+// Events
+// ========================
+
+event ObjectUpdate
+	temp0 = Oscillation
+	temp0 <<= 1
+	Sin(Object.Angle, temp0)
+	Object.Angle >>= 2
+	Object.Angle += 128
+	
+	temp1 = Object.PropertyValue
+	temp1++
+	temp1 <<= 4
+	
+	Cos(Object.ChangeX, Object.Angle)
+	Object.ChangeX *= temp1
+	Object.ChangeX <<= 7
+	Object.ChangeX += Object.XPos
+	Object.ChangeX &= 4294901760
+	Object.ChangeX -= Object.PlatformX
+	
+	Sin(Object.ChangeY, Object.Angle)
+	Object.ChangeY *= temp1
+	Object.ChangeY <<= 7
+	Object.ChangeY += Object.YPos
+	Object.ChangeY &= 4294901760
+	Object.ChangeY -= Object.PlatformY
+
+	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
+		temp0 = Object.XPos
+		temp1 = Object.YPos
+		
+		Object.XPos = Object.PlatformX
+		Object.YPos = Object.PlatformY
+		
+		BoxCollisionTest(C_PLATFORM, object.entityPos, -24, -6, 24, 8, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+		if CheckResult == true
+			object[0].XPos += Object.ChangeX
+			object[0].YPos += Object.ChangeY
+		end if
+		
+		Object.XPos = temp0
+		Object.YPos = temp1
+	next
+end event
+
+event ObjectDraw
+	
+	DrawSprite(0)
+	
+	temp0 = 0
+	temp1 = 16
+	while temp0 < Object.PropertyValue
+		
+		Cos(temp2, Object.Angle)
+		temp2 *= temp1
+		temp2 <<= 7
+		temp2 += Object.XPos
+		
+		Sin(temp3, Object.Angle)
+		temp3 *= temp1
+		temp3 <<= 7
+		temp3 += Object.YPos
+		
+		DrawSpriteXY(1, temp2, temp3)
+		
+		temp0++
+		temp1 += 16
+		
+	loop
+	
+	Cos(Object.PlatformX, Object.Angle)
+	Object.PlatformX *= temp1
+	Object.PlatformX <<= 7
+	Object.PlatformX += Object.XPos
+	Object.PlatformX &= 4294901760
+	
+	Sin(Object.PlatformY, Object.Angle)
+	Object.PlatformY *= temp1
+	Object.PlatformY <<= 7
+	Object.PlatformY += Object.YPos
+	Object.PlatformY &= 4294901760
+	
+	DrawSpriteXY(2, Object.PlatformX, Object.PlatformY)
+	
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event ObjectStartup
+	LoadSpriteSheet("SSZ/Objects.gif")
+	//Pivot Ball Frame
+	SpriteFrame(-8, -8, 16, 16, 148, 1)
+	//Chain Frame
+	SpriteFrame(-8, -8, 16, 16, 165, 1)
+	//Platform Frame
+	SpriteFrame(-24, -8, 48, 16, 182, 1)
+
+	foreach (TypeName[Swing Platform], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].priority = PRIORITY_BOUNDS
+	next
+end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKEdit
+	if editor.returnVariable == true
+		switch editor.variableID
+		case EDIT_VAR_PROPVAL // property value
+			checkResult = object.propertyValue
+			break
+			
+		case 0 // length
+			checkResult = object.propertyValue
+			checkResult &= 0x7F
+			break
+		end switch
+	else
+		switch editor.variableID
+		case EDIT_VAR_PROPVAL // property value
+			object.propertyValue = editor.variableValue
+			break
+			
+		case 0 // length
+			editor.variableValue &= 0x7F
+			object.propertyValue &= 0x80
+
+			object.propertyValue |= editor.variableValue
+			break
+		end switch
+	end if
+end event
+
+
+event RSDKDraw
+	temp7 = object.propertyValue
+	temp7 &= 0x7F
+
+	DrawSprite(0)
+
+	temp0 = 0
+	temp1 = 16
+	while temp0 < temp7
+		Cos(temp2, 128)
+		temp2 *= temp1
+		temp2 <<= 7
+		temp2 += object.xpos
+
+		Sin(temp3, 128)
+		temp3 *= temp1
+		temp3 <<= 7
+		temp3 += object.ypos
+		
+		DrawSpriteXY(1, temp2, temp3)
+		temp0++
+		temp1 += 16
+	loop
+	temp1 -= 8
+
+	Cos(temp2, 128)
+	temp2 *= temp1
+	temp2 <<= 7
+	temp2 += object.xpos
+
+	Sin(temp3, 128)
+	temp3 *= temp1
+	temp3 <<= 7
+	temp3 += object.ypos
+
+	DrawSpriteXY(2, temp2, temp3)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
+	//Pivot Ball Frame
+	SpriteFrame(-8, -8, 16, 16, 148, 1)
+	//Chain Frame
+	SpriteFrame(-8, -8, 16, 16, 165, 1)
+	//Platform Frame
+	SpriteFrame(-24, -8, 48, 16, 182, 1)
+
+	AddEditorVariable("length")
+	SetActiveVariable("length")
+end event

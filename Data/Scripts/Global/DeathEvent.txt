@@ -1,0 +1,117 @@
+//------------Sonic Nexus Death Event Script----------//
+//----Scripted by Christian Whitehead "The Taxman"----//
+
+private alias Object.Value1 : Object.LeftText
+private alias Object.Value2 : Object.RightText
+private alias Object.Value3 : Object.Timer
+
+private alias 0 : GAME_OVER
+private alias 1 : TIME_OVER
+
+event ObjectUpdate
+
+	switch Object.State
+	case GAME_OVER
+	case TIME_OVER
+		temp0 = screen.xcenter
+		temp0 -= 11
+		if Object.LeftText < temp0
+			Object.LeftText += 16
+			if Object.LeftText > temp0
+				Object.LeftText = temp0
+			end if
+		end if
+
+		temp0 += 18
+		if Object.RightText > temp0
+			Object.RightText -= 16
+			if Object.RightText < temp0
+				Object.RightText = temp0
+			end if
+		end if
+
+		if Object.Timer < 288
+			Object.Timer += 4
+		else
+			//Restart the Act
+			if Object.State == 0
+				Stage.ActiveList = PRESENTATION_STAGE
+				Stage.ListPos = 0
+			end if
+			if Object.State == TIME_OVER
+				recMilliSeconds = 0
+				recSeconds = 0
+				recMinutes = 0
+			end if
+			LoadStage()
+		end if
+
+		if Object.Timer > 0
+			Music.Volume -= 2
+			SetScreenFade(0, 0, 0, Object.Timer, 0, 256)
+		else
+			if KeyPress.ButtonA==true
+				Object.Timer=0
+			end if
+			if KeyPress.ButtonB==true
+				Object.Timer=0
+			end if
+			if KeyPress.ButtonC==true
+				Object.Timer=0
+			end if
+		end if
+
+		break
+		
+	case 2 //Fade to Black
+		if Object.Timer < 288
+			Music.Volume -= 2
+			Object.Timer += 4
+		else
+			//Restart the Act
+			LoadStage()
+		end if
+
+		
+		SetScreenFade(0, 0, 0, Object.Timer, 0, 256)
+
+		break
+		
+	end switch
+	
+end event
+
+event ObjectDraw
+
+	switch Object.State
+	case GAME_OVER
+		DrawSpriteScreenXY(0, Object.LeftText, 118)
+		DrawSpriteScreenXY(2, Object.RightText, 118)
+		break
+	case TIME_OVER
+		DrawSpriteScreenXY(1, Object.LeftText, 118)
+		DrawSpriteScreenXY(2 ,Object.RightText, 118)
+		break
+	end switch
+
+end event
+
+event ObjectStartup
+
+	LoadSpriteSheet("Global/Display.gif")
+
+	//Game Text
+	SpriteFrame(-64, -9, 64, 18, 355, 79)
+
+	//Time Text
+	SpriteFrame(-56, -9, 56, 18, 355, 98)
+
+	//Over Text
+	SpriteFrame(0, -9, 64, 18, 355, 117)
+
+end event
+
+sub RSDK
+	LoadSpriteSheet("Global/Display.gif")
+	SetEditorIcon(Icon0,SingleIcon,-15,-15,30,30,224,347)
+end sub
