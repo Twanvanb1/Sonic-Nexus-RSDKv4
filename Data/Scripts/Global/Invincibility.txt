@@ -34,11 +34,9 @@ event ObjectUpdate
 		object.timer++
 			if object.timer > 3
 				object.timer = 0
-				CreateTempObject(Typename[Invincibility], 0, player[0].xpos, player[0].ypos)
+				CreateTempObject(Typename[Invincibility], 0, player[-playerCount].xpos, player[-playerCount].ypos)
 				object[TempObjectPos].state = 1
-				object[TempObjectPos].draworder = player[0].sortedDrawOrder
-
-	
+				object[TempObjectPos].draworder = player[-playerCount].sortedDrawOrder	
 			end if
 		break
 	
@@ -62,7 +60,7 @@ end event
 event ObjectDraw
 	switch object.state
 	case INVINCIBILITY_SPAWNER
-		DrawSpriteXY(object.frame, player[currentPlayer].xpos, player[currentPlayer].ypos)
+		DrawSpriteXY(object.frame, player[0].xpos, player[0].ypos)
 		break
 	
 	case INVINCIBILITY_SPARKLES
