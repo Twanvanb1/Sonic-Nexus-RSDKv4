@@ -18,7 +18,7 @@ private alias object.value0 : object.paletteTimer
 
 event ObjectUpdate
 	Object.paletteTimer++
-	if Object.paletteTimer > 4
+	if Object.paletteTimer > 3
 		Object.paletteTimer = 0
 		RotatePalette(0, 128 ,131, true)
 	end if
