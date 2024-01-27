@@ -11,7 +11,7 @@
 private alias Object.Value0 : Object.Scroll
 
 // Reserved Object Slot Aliases
-private alias 30 : SLOT_CLOUDS
+private alias 29 : SLOT_CLOUDS
 
 // Face Buffer flags
 private alias 0 : FACE_FLAG_TEXTURED_3D
@@ -90,6 +90,7 @@ event ObjectStartup
 	// Note - the numbers getting set here are 0, but they're gonna be overwritten with 0 again a few lines later too
 	ArrayPos0 = scene3D.vertexCount
 	ArrayPos1 = scene3D.faceCount
+
 	
 	// Reset vertexes to their starting position
 	MatrixTranslateXYZ(MAT_WORLD, 0, 0, 0)
