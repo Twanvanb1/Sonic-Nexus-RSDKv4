@@ -15,18 +15,14 @@ private alias  1 : START_NEWGAME
 event ObjectUpdate
 	switch Object.State
 	case START_AWAITACTION
-		if engine.deviceType == MOBILE
+#platform: MOBILE
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 			if checkResult > -1
 				object.state = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
+#endplatform
 
-			if keyPress[0].start == true
-				object.state = START_NEWGAME
-				PlaySfx(SfxName[Enter], false)
-			end if
-		else 
 			if keyPress[0].start == true
 				object.state = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
@@ -49,13 +45,6 @@ event ObjectUpdate
 				object.state = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
-			
-			// if keyPress[0].buttonX == true
-			// 	stage.playerListPos = 4
-			// 	object.state = START_NEWGAME
-			// 	PlaySfx(SfxName[Enter], false)
-			// end if
-		end if
 		break
 	case START_NEWGAME
 		Music.Volume -= 2

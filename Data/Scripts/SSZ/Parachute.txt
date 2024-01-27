@@ -49,7 +49,6 @@ event ObjectUpdate
 	case PARACHUTE_PLAYER_HANGING
 		player[0].EntityPos = Object.PlayerNo
 		player[0].Animation = ANI_HANGING
-		player[0].State = Player_State_Air
 
 		if player[0].Left == true
 			player[0].Direction = FACING_LEFT
@@ -98,6 +97,10 @@ event ObjectUpdate
 
 		end if
 
+		if player[0].yvel > 0x8000
+			Object[0].YVel -= 0x3600
+		end if
+
 		player[0].XVel = player[0].Speed
 		Object.XPos = player[0].XPos
 		Object.YPos = player[0].YPos
@@ -121,14 +124,11 @@ event ObjectUpdate
 		end switch
 		Object.YPos += temp0
 
-		if player[0].yvel > 0x8000
-			Object[0].YVel -= 0x3600
-		end if
-
 		if player[0].State == Player_State_Hurt
 			Object.Priority = 1
 			Object.State = PARACHUTE_PLAYER_LEFT
 			ArrayPos0 = Object.PlayerNo
+			player[0].animation = ANI_HURT
 			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = player[0].XVel
 		end if
@@ -151,7 +151,7 @@ event ObjectUpdate
 			player[0].Gravity = true
 
 			Object.Priority = 1
-			Object.State = 2
+			Object.State = PARACHUTE_PLAYER_LEFT
 			ArrayPos0 = Object.PlayerNo
 			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = player[0].XVel
@@ -182,47 +182,48 @@ event ObjectUpdate
 	end switch
 
 	foreach (GROUP_PLAYERS, currentPlayer, ACTIVE_ENTITIES)
-		if player[currentPlayer].state != Player_State_Static
-			BoxCollisionTest(C_TOUCH, object.entityPos, -16, 20, 16, 24, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
-				if checkResult == true
-					if Object.State == PARACHUTE_IDLE
-						Object.StartX = Object.XPos
-						Object.StartY = Object.YPos
+		BoxCollisionTest(C_TOUCH, object.entityPos, -16, 20, 16, 24, currentPlayer, C_BOX, C_BOX, C_BOX, C_BOX)
+			if checkResult == true
+				if Object.State == PARACHUTE_IDLE
+					Object.StartX = Object.XPos
+					Object.StartY = Object.YPos
 
-						Object.PlayerNo = player[0].EntityPos
-						ArrayPos0 = player[0].EntityPos
-						Object[ArrayPos0].PropertyValue = 1
-						player[0].yvel -= 0x3000
-						player[0].Animation = ANI_HANGING
-						Object.XPos = player[0].XPos
-						Object.YPos = player[0].YPos
-						switch stage.playerListPos
-							case PLAYER_SONIC_TAILS_A
-							case PLAYER_SONIC_A
-								temp0 = player[0].CollisionTop
-								temp0 -= 22
-								temp0 <<= 16
-								break
-							case PLAYER_TAILS_A
-								temp0 = player[0].CollisionTop
-								temp0 -= 18
-								temp0 <<= 16
-								break
-							case PLAYER_KNUCKLES_A
-								temp0 = player[0].CollisionTop
-								temp0 -= 19
-								temp0 <<= 16
-								break
-						end switch
-						player[0].Speed = player[0].XVel
-						Object.YPos += temp0
-						Object.State = 1
-						player[0].YVel = 0
-						player[0].Gravity = true
-						PlaySfx(SFXName[Catch], false)
-					end if
+					Object.PlayerNo = player[0].EntityPos
+					ArrayPos0 = player[0].EntityPos
+					Object[ArrayPos0].PropertyValue = 1
+					player[0].yvel -= 0x3000
+					player[0].Animation = ANI_HANGING
+					Object.XPos = player[0].XPos
+					Object.YPos = player[0].YPos
+					switch stage.playerListPos
+						case PLAYER_SONIC_TAILS_A
+						case PLAYER_SONIC_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 22
+							temp0 <<= 16
+							break
+						case PLAYER_TAILS_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 18
+							temp0 <<= 16
+							break
+						case PLAYER_KNUCKLES_A
+							temp0 = player[0].CollisionTop
+							temp0 -= 19
+							temp0 <<= 16
+							break
+					end switch
+
+					player[0].Speed = player[0].XVel
+					Object.YPos += temp0
+					Object.State = 1
+					player[0].YVel = 0
+					player[0].Gravity = true
+								
+					player[0].state = Player_State_Air
+					PlaySfx(SFXName[Catch], false)
 				end if
-		end if
+			end if
 	next
 end event
 

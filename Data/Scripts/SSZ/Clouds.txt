@@ -1,12 +1,55 @@
-//------------------Sonic CD Clouds Script--------------------//
-//--------Scripted by Christian Whitehead 'The Taxman'--------//
-//-------Unpacked By Rubberduckycooly's Script Unpacker-------//
+// ----------------------------------
+// RSDK Project: Sonic Nexusv4
+// Script Description: Clouds Object
+// Script Author: Twanvanb1
+// ----------------------------------
 
+// ========================
 // Aliases
+// ========================
+
 private alias Object.Value0 : Object.Scroll
+
+// Reserved Object Slot Aliases
+private alias 30 : SLOT_CLOUDS
 
 // Face Buffer flags
 private alias 0 : FACE_FLAG_TEXTURED_3D
+
+// ========================
+// Function Declarations
+// ========================
+
+reserve function Clouds_DebugDraw
+reserve function Clouds_DebugSpawn
+
+// ========================
+// Function Definitions
+// ========================
+
+private function Clouds_DebugDraw
+	DrawSprite(0)
+end function
+
+
+private function Clouds_DebugSpawn
+	CreateTempObject(TypeName[Clouds], temp0, object.xpos, object.ypos)
+	object[tempObjectPos].type = TypeName[Blank Object]
+
+	// There can only be 1 UFO object at a time since they occupy the Title Card object slot, so let's see if they exist and either add them or remove them
+	if object[SLOT_CLOUDS].type == TypeName[Clouds]
+		// If the UFOs already exist, clear them
+		ResetObjectEntity(SLOT_CLOUDS, TypeName[Blank Object], 0, 0, 0)
+		stage.activeLayer[0] = 1
+	else
+		// If they don't exist, then spawn them
+		ResetObjectEntity(SLOT_CLOUDS, TypeName[Clouds], 0, 0, 0)
+		object[SLOT_CLOUDS].priority = PRIORITY_ACTIVE
+		object[SLOT_CLOUDS].drawOrder = 1 // Place it among the lowest draw order, it's supposed to be drawn as part of the BG
+		object[SLOT_CLOUDS].inkEffect = INK_ALPHA
+		stage.activeLayer[0] = 3
+	end if
+end function
 
 
 event ObjectDraw
@@ -28,9 +71,15 @@ end event
 
 
 event ObjectStartup
-	
 	// Load the Clouds Sprite Sheet
 	LoadSpriteSheet("SSZ/Clouds.gif")
+	SpriteFrame(-13, -13, 26, 26, 0, 16)
+
+	foreach (TypeName[Clouds], arrayPos0, ALL_ENTITIES)
+		object[arrayPos0].priority 	= PRIORITY_ALWAYS
+		object[arrayPos0].alpha 	= 0xFF
+		object[arrayPos0].drawOrder = 1
+	next
 	
 	// No Sprite Frames need to be setup,
 	// since this object is doing fun 3d stuff with UV's instead
@@ -166,19 +215,11 @@ event ObjectStartup
 		temp3++
 		
 	loop
-	
-	arrayPos0 = 32
-	while arrayPos0 < 0x420
-		if object[arrayPos0].type == TypeName[Clouds]
-			object[arrayPos0].priority 	= PRIORITY_ALWAYS
-			object[arrayPos0].alpha 	= 0xFF
-			object[arrayPos0].drawOrder = 1
 
-		end if
-
-		arrayPos0++
-	loop
-	
+	SetTableValue(TypeName[Clouds], DebugMode_ObjCount, DebugMode_TypesTable)
+	SetTableValue(Clouds_DebugDraw, DebugMode_ObjCount, DebugMode_DrawTable)
+	SetTableValue(Clouds_DebugSpawn, DebugMode_ObjCount, DebugMode_SpawnTable)
+	DebugMode_ObjCount++
 end event
 
 
@@ -192,8 +233,8 @@ end event
 
 
 event RSDKLoad
-	LoadSpriteSheet("Global/Display.gif")
-	SpriteFrame(-16, -16, 32, 32, 1, 143)
+	LoadSpriteSheet("SSZ/Clouds.gif")
+	SpriteFrame(-13, -13, 26, 26, 0, 16)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

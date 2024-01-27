@@ -348,7 +348,6 @@ event ObjectDraw
 			Object[31].Value2 =- 177
 			Object[31].Value3 =- 209
 		end if
-
 		break
 
 	case 14 //Exiting Bouncing Act Ball

@@ -45,7 +45,6 @@ end function
 
 private function Chompy_DebugSpawn
 	CreateTempObject(TypeName[Chompy], 0, object.xpos, object.ypos)
-	//object[tempObjectPos].centerPos.y = object[tempObjectPos].ypos
 end function
 
 // ========================

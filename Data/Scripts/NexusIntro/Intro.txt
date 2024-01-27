@@ -52,23 +52,18 @@ event ObjectUpdate
 			Object.State = 3
 		end if
 
-		if engine.deviceType == MOBILE
+#platform: MOBILE	
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 			if checkResult > -1
 				object.state = FADE_TO_WHITE
 				Object.timer = 0
 			end if
+#endplatform
 
 			if keyPress[0].start == true
 				Object.State = FADE_TO_WHITE
 				Object.timer = 0
 			end if
-		else 
-			if keyPress[0].start == true
-				Object.State = FADE_TO_WHITE
-				Object.timer = 0
-			end if
-		end if
 		
 		break
 
