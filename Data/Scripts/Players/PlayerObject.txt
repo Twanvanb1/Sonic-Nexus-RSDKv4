@@ -1551,7 +1551,11 @@ public function Player_ProcessUpdate
 			currentPlayer = player.entityPos
 			if player.entityPos == camera[currentPlayer].target
 				// Restore the camera's state
-				camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+				if screen.xsize >= 424
+					camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+				else
+					camera[currentPlayer].style = CAMERASTYLE_EXTENDED
+				end if
 			end if
 		end if
 	end if
@@ -1867,7 +1871,11 @@ public function Player_State_Peelout
 	// Release
 	if player.up == false
 		player.scrollDelay = 15
-		screen.camerastyle = CAMERASTYLE_HLOCKED
+		if screen.xsize >= 424
+			camera[currentPlayer].style = CAMERASTYLE_HLOCKED
+		else
+			camera[currentPlayer].style = CAMERASTYLE_EXTENDED
+		end if
 
 		player.state = Player_State_Ground
 		// Cancels the peel out if you didn't charged it enough
@@ -3444,6 +3452,7 @@ public function Player_State_Spindash
 		player.speed = 0
 	end if
 
+
 	if player.jumpPress == true
 		if player.abilityTimer < 0x90000
 			player.abilityTimer += 0x20000
@@ -3461,6 +3470,7 @@ public function Player_State_Spindash
 	
 #platform: USE_ORIGINS
 	temp1 = player.down
+	
 	
 	CheckEqual(player.releasingDropDash, false)
 	temp2 = checkResult
@@ -3510,7 +3520,11 @@ public function Player_State_Spindash
 		currentPlayer = player.entityPos
 		if player.entityPos == camera[currentPlayer].target
 			player.scrollDelay = 15
-			camera[currentPlayer].style = CAMERASTYLE_HLOCKED
+			if screen.xsize >= 424
+				camera[currentPlayer].style = CAMERASTYLE_HLOCKED
+			else
+				camera[currentPlayer].style = CAMERASTYLE_EXTENDED
+			end if
 		end if
 
 		temp0 = player.abilityTimer
@@ -4692,7 +4706,11 @@ public function Player_State_Death
 					vsGame[tempObjectPos].state = VSGAME_FADEOUT
 					camera[currentPlayer].xpos = player.ixpos
 					camera[currentPlayer].ypos = player.iypos
-					camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+					if screen.xsize >= 424
+						camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+					else
+						camera[currentPlayer].style = CAMERASTYLE_EXTENDED
+					end if
 					camera[currentPlayer].enabled = true
 #endplatform
 				end if
@@ -4844,7 +4862,11 @@ public function Player_State_Drown
 				vsGame[tempObjectPos].state = VSGAME_FADEOUT
 				camera[currentPlayer].xpos = player.ixpos
 				camera[currentPlayer].ypos = player.iypos
-				camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+				if screen.xsize >= 424
+					camera[currentPlayer].style = CAMERASTYLE_FOLLOW
+				else
+					camera[currentPlayer].style = CAMERASTYLE_EXTENDED
+				end if
 				camera[currentPlayer].enabled = true
 #endplatform
 			end if
@@ -5396,7 +5418,11 @@ event ObjectStartup
 	// the last one on the list is used
 	foreach (TypeName[Player Object], arrayPos0, ALL_ENTITIES)
 		camera[0].enabled = true
-		camera[0].style = CAMERASTYLE_FOLLOW
+		if screen.xsize >= 424
+			camera[0].style = CAMERASTYLE_FOLLOW
+		else
+			camera[0].style = CAMERASTYLE_EXTENDED
+		end if
 		camera[0].target = SLOT_PLAYER1
 
 		currentPlayer = SLOT_PLAYER1
