@@ -3389,7 +3389,11 @@ public function Player_State_LookUp
 			player.timer = 0
 		else
 			if player.jumpPress == true
-				CallFunction(player.actionPeelout)
+				if stage.playerListPos == PLAYER_SONIC_A
+					CallFunction(player.actionPeelout)
+				else
+					CallFunction(Player_Action_Jump)
+				end if
 			end if
 		end if
 	end if
