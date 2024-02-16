@@ -1,6 +1,7 @@
 # **Sonic Nexus-RSDKv4**
 A port of Sonic Nexus to RSDKv4
-	
+
+> This is made for normal RSDKv4, so I can't guarantee that it will work on RSDKv5u  
 # FAQ
 
 ### Q: I found a bug!
@@ -8,6 +9,11 @@ A: Submit them under the `issues` tab and I will try to fix it.
 
 ### Q: Will there be an Android, iOS, Steam Deck, etc port?
 A: Everything in this project comes as-is. If it doesn't run on a specific platform, don't get your hopes up on it being fixed.
+
+## things that still need to be done and do.
+- [ ] Add support for RSDKv5u
+- [ ] Make title card function properly on steam deck aspect ratio
+- [ ] Fix collision issues
 
 # Credits
 *	Slingerland: Director, Producer, Level Designer, Level Graphics, Concept Artist
@@ -27,4 +33,3 @@ A: Everything in this project comes as-is. If it doesn't run on a specific platf
 
 # Contact:
 Join the [Retro Engine Modding Discord Server](https://dc.railgun.works/retroengine) for any extra questions about this project.
-
