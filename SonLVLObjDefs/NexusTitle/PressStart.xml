@@ -9,7 +9,7 @@
     </ImageFromSheet>
   </Images>
   <ImageSets>
-    <ImageSet id="Zip Line">
+    <ImageSet id="Press Start">
       <ImageRef image="0">
       </ImageRef>
 	  <ImageRef image="1">
@@ -17,6 +17,6 @@
     </ImageSet>
   </ImageSets>
   <DefaultImage>
-    <ImageSetRef set="Zip Line" />
+    <ImageSetRef set="Press Start" />
   </DefaultImage>
 </ObjDef>
