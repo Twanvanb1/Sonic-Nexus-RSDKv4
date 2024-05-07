@@ -12,9 +12,16 @@ private alias object.value1 : object.Alpha
 private alias  0 : START_AWAITACTION
 private alias  1 : START_NEWGAME
 
+// Players
+private alias  0 : SONIC
+private alias  1 : TAILS
+private alias  2 : KNUCKLES
+private alias  3 : SONIC_TAILS
+
 event ObjectUpdate
 	switch Object.State
 	case START_AWAITACTION
+
 #platform: MOBILE
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 			if checkResult > -1
@@ -28,24 +35,40 @@ event ObjectUpdate
 				PlaySfx(SfxName[Enter], false)
 			end if
 			
-			if keyPress[0].buttonA == true
-				stage.playerListPos = 0
-				object.state = START_NEWGAME
-				PlaySfx(SfxName[Enter], false)
+			if keyDown[0].buttonA == true
+				if keyDown[0].buttonB == true
+					if keyPress[0].start == true
+						stage.playerListPos = SONIC_TAILS
+						object.state = START_NEWGAME
+						PlaySfx(SfxName[Enter], false)
+					end if
+
+				else
+					if keyPress[0].start == true
+						stage.playerListPos = SONIC
+						object.state = START_NEWGAME
+						PlaySfx(SfxName[Enter], false)
+					end if
+				end if
+			end if
+
+			if keyDown[0].buttonB == true
+				if keyPress[0].start == true
+					stage.playerListPos = TAILS
+					object.state = START_NEWGAME
+					PlaySfx(SfxName[Enter], false)
+				end if
 			end if
 			
-			if keyPress[0].buttonB == true
-				stage.playerListPos = 1
-				object.state = START_NEWGAME
-				PlaySfx(SfxName[Enter], false)
-			end if
-			
-			if keyPress[0].buttonC == true
-				stage.playerListPos = 2
-				object.state = START_NEWGAME
-				PlaySfx(SfxName[Enter], false)
+			if keyDown[0].buttonC == true
+				if keyPress[0].start == true
+					stage.playerListPos = KNUCKLES
+					object.state = START_NEWGAME
+					PlaySfx(SfxName[Enter], false)
+				end if
 			end if
 		break
+
 	case START_NEWGAME
 		Music.Volume -= 2
 		Object.Alpha += 4
@@ -74,22 +97,20 @@ event ObjectDraw
 	
 	temp1 = screen.ysize
 	temp1 -= 46
-	if engine.deviceType == MOBILE
-		if Object.timer > 14
+
+	if Object.timer > 14
+		if engine.deviceType == MOBILE
 			temp0 = screen.xcenter
 			temp0 -= 32
 			DrawSpriteScreenXY(2, temp0, temp1)
 			DrawSpriteScreenXY(3, screen.xcenter, temp1)
 			temp0 += 64
 			DrawSpriteScreenXY(4, temp0, temp1)
-		end if
-	else
-		if Object.timer > 14
+		else
 			temp0 = screen.xcenter
 			temp0 -= 23
 			DrawSpriteScreenXY(0, temp0, temp1)
 			temp0 += 46
-			DrawSpriteScreenXY(1, temp0, temp1)
 		end if
 	end if
 
@@ -97,7 +118,7 @@ end event
 
 event ObjectStartup
 	LoadSpriteSheet("NexusTitle/Menu.gif")
-	SpriteFrame(-20, 0, 41, 13, 1, 1)	//#0 PRESS
+	SpriteFrame(-20, 0, 41, 13, 1, 1)	// #0 PRESS
 	SpriteFrame(-20, 0, 41, 13, 1, 15) 	// #1 START
 	SpriteFrame(-20, 0, 41, 13, 1, 29) 	// #2 TOUCH
 	SpriteFrame(-8, 0, 17, 13, 1, 43) 	// #3 TO
