@@ -93,8 +93,8 @@ event RSDKDraw
 end event
 
 event RSDKLoad
-	LoadSpriteSheet("Global/Editor.gif")
-	SpriteFrame(-16, -16, 32, 32, 32, 32)
+	LoadSpriteSheet("NexusTitle/Menu.gif")
+	SpriteFrame(-10, -10, 21, 21, 43, 0)
 
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event
