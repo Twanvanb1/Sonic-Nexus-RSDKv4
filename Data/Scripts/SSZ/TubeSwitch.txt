@@ -4,6 +4,11 @@
 // Script Author: Twanvanb1
 // ----------------------------------
 
+// ========================
+// Aliases
+// ========================
+
+
 private alias 37 : TYPE_TUBESWITCH
 
 //----Player Object Variables----//
@@ -114,8 +119,18 @@ event ObjectUpdate
 		end if
 	next
 end event
-		
-sub RSDK
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
 	LoadSpriteSheet("NexusGlobals/Display.gif")
-	SetEditorIcon(Icon0,SingleIcon, -15, -15, 30, 30, 193, 378)
-end sub
+	SpriteFrame(-15, -15, 30, 30, 193, 378)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event
