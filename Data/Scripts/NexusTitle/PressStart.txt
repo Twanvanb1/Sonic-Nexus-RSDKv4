@@ -99,18 +99,22 @@ event ObjectDraw
 	temp1 -= 46
 
 	if Object.timer > 14
-		if engine.deviceType == MOBILE
+#platform: MOBILE
 			temp0 = screen.xcenter
 			temp0 -= 32
 			DrawSpriteScreenXY(2, temp0, temp1)
 			DrawSpriteScreenXY(3, screen.xcenter, temp1)
 			temp0 += 64
 			DrawSpriteScreenXY(4, temp0, temp1)
-		else
+#endplatform
+
+#platform: STANDARD
 			temp0 = screen.xcenter
 			temp0 -= 23
 			DrawSpriteScreenXY(0, temp0, temp1)
 			temp0 += 46
+#endplatform
+
 		end if
 	end if
 
