@@ -10,8 +10,11 @@ private alias Object.Value1 : Object.ScaleSpeed
 private alias Object.Value3 : SonicBlink
 private alias Object.Value4 : TailsBlink
 
+// ========================
+// Events
+// ========================
+
 event ObjectUpdate
-	
 	switch Object.PropertyValue
 	case 0
 		if Object.State < 4
@@ -164,10 +167,19 @@ event ObjectStartup
 	SpriteFrame(0,0,27,22,1,227)
 	SpriteFrame(0,0,27,22,1,227)
 	SpriteFrame(0,0,27,22,1,227)
-	
 end event
 
-event RSDK
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
 	LoadSpriteSheet("NexusTitle/Logo.gif")
-	SetEditorIcon(Icon1,0,-128,-80,256,160,0,0)
+	SpriteFrame(-128, -80, 256, 160, 0, 0)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

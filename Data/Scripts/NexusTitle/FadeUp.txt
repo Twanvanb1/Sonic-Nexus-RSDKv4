@@ -4,8 +4,16 @@
 // Script Author: Twanvanb1
 // ----------------------------------
 
+// ========================
+// Aliases
+// ========================
+
 private alias object.value0 : object.Timer
 private alias object.value1 : object.Unknown
+
+// ========================
+// Events
+// ========================
 
 event ObjectUpdate
 	switch Object.State
@@ -75,7 +83,18 @@ event ObjectStartup
 	SetMusicTrack("Nexus/TitleScreen.ogg", 0, false)
 end event
 
-event RSDK
-	LoadSpriteSheet("NexusTitle/Menu.gif")
-	SetEditorIcon(Icon1, 0, -10, -10, 21, 21, 43, 0)
+// ========================
+// Editor Events
+// ========================
+
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Editor.gif")
+	SpriteFrame(-16, -16, 32, 32, 32, 32)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

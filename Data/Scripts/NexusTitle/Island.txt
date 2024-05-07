@@ -5,21 +5,35 @@
 // Script Porter: Twanvanb1
 // ----------------------------------
 
+// ========================
+// Events
+// ========================
+
 event ObjectDraw
-	Object.XPos -= 4096
+	Object.XPos -= 0x1000
 	DrawSprite(0)
 end event
 
 event ObjectStartup
 	LoadSpriteSheet("NexusTitle/Island.gif")
-	SpriteFrame(-123,-28, 246, 56, 0, 0)
+	SpriteFrame(-123, -28, 246, 56, 0, 0)
 
 	foreach (TypeName[Island], arrayPos0, ALL_ENTITIES)
 		Object[ArrayPos0].DrawOrder = 1
 	next
 end event
 
-sub RSDK
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
 	LoadSpriteSheet("NexusTitle/Island.gif")
-	SetEditorIcon(Icon1,0,-123,-28,246,56,0,0)
-end sub
+	SpriteFrame(-123, -28, 246, 56, 0, 0)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event

@@ -18,6 +18,10 @@ private alias  1 : TAILS
 private alias  2 : KNUCKLES
 private alias  3 : SONIC_TAILS
 
+// ========================
+// Events
+// ========================
+
 event ObjectUpdate
 	switch Object.State
 	case START_AWAITACTION
@@ -129,7 +133,17 @@ event ObjectStartup
 	SpriteFrame(-20, 0, 41, 13, 1, 15) 	// #4 START
 end event
 
-event RSDK
-	LoadSpriteSheet("NexusTitle/Menu.gif")
-	SetEditorIcon(Icon1,0,-46,-6,41,13,1,1)
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Editor.gif")
+	SpriteFrame(-16, -16, 32, 32, 32, 32)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event
