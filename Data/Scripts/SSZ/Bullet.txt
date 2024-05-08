@@ -46,7 +46,7 @@ end event
 
 event ObjectDraw
 	temp0 = Object.Frame
-	temp0 >> =2
+	temp0 >>= 2
 	DrawSprite(temp0)
 	Object.Frame++
 
