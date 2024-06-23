@@ -12,12 +12,22 @@ private alias 4: FX_TINT	//putting this here to make the title card work
 private alias object.value0 : object.timer
 private alias object.value1 : object.BouncingActBallPos
 
+//Player aliases
+private alias Object.ControlMode 	: player.controlmode
+private alias Object.Up 			: player.Up
+private alias Object.Down 			: player.Down
+private alias Object.Left 			: player.Left
+private alias Object.Right			: player.Right
+private alias Object.JumpPress 		: player.JumpPress
+private alias Object.JumpHold		: player.JumpHold
+private alias object.value1  : player.timer
+
 // Determines whether the act results will say got through zone or got through act [num]
 public value TitleCard_showZoneText = 0
 
 event ObjectUpdate
 	options.touchControls = false
-	object[0].value1 = 0
+	player[currentPlayer].timer = 0
 end event
 
 event ObjectDraw
@@ -25,13 +35,13 @@ event ObjectDraw
 	case 0 //Fade Up
 
 		//Freeze Control
-		Object[0].ControlMode = -1
-		Object[0].Up = false
-		Object[0].Down = false
-		Object[0].Left = false
-		Object[0].Right = false
-		Object[0].JumpPress = false
-		Object[0].JumpHold = false
+		player[currentPlayer].ControlMode = -1
+		player[currentPlayer].Up = false
+		player[currentPlayer].Down = false
+		player[currentPlayer].Left = false
+		player[currentPlayer].Right = false
+		player[currentPlayer].JumpPress = false
+		player[currentPlayer].JumpHold = false
 
 		if object.timer > 0
 			
@@ -176,11 +186,15 @@ event ObjectDraw
 					Object[24].InkEffect = 2
 				end if
 			end if
+			
 			Object.XPos += screen.xcenter
 			Object.XPos -= 125
 			switch screen.xsize
 			case 320
 				Object.XPos += 0x40000
+				break
+			case 384
+				Object.XPos += 0x44C00
 				break
 			case 424
 				Object.XPos += 0x46C00
@@ -328,7 +342,7 @@ event ObjectDraw
 
 
 			//Restore Control
-			Object[0].ControlMode = 0
+			player[currentPlayer].ControlMode = 0
 
 			//Remove all the Title Card Objects and Replace with the HUD
 			ResetObjectEntity(24, 0, 0, 0, 0)

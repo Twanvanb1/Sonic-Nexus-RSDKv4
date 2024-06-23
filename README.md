@@ -13,7 +13,7 @@ A: Everything in this project comes as-is. If it doesn't run on a specific platf
 
 ## Things that still need to be done.
 - [ ] Add support for RSDKv5u
-- [ ] Make title card function properly on steam deck / MacBook Pro aspect ratio
+- [X] Make title card function properly on steam deck / MacBook Pro aspect ratio
 - [ ] Fix collision issues
 
 ## Credits
