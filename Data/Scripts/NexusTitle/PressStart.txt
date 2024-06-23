@@ -38,7 +38,7 @@ event ObjectUpdate
 				object.state = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
-			
+
 			if keyDown[0].buttonA == true
 				if keyDown[0].buttonB == true
 					if keyPress[0].start == true
@@ -63,7 +63,7 @@ event ObjectUpdate
 					PlaySfx(SfxName[Enter], false)
 				end if
 			end if
-			
+
 			if keyDown[0].buttonC == true
 				if keyPress[0].start == true
 					stage.playerListPos = KNUCKLES
@@ -93,12 +93,11 @@ event ObjectUpdate
 end event
 
 event ObjectDraw
-
 	Object.timer++
 	if Object.timer > 29
 		Object.timer = 0
 	end if
-	
+
 	temp1 = screen.ysize
 	temp1 -= 46
 
@@ -117,8 +116,8 @@ event ObjectDraw
 			temp0 -= 23
 			DrawSpriteScreenXY(0, temp0, temp1)
 			temp0 += 46
+			DrawSpriteScreenXY(1, temp0, temp1)
 #endplatform
-
 		end if
 	end if
 
