@@ -1,5 +1,5 @@
 # **Sonic Nexus-RSDKv4**
-A port of Sonic Nexus to RSDKv4
+![](Resources/LogoRSDK.png)
 
 > This is made with standalone RSDKv4 in mind, so I can't guarantee that it will work on RSDKv5u  
 
