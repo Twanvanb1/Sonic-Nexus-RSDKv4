@@ -79,4 +79,6 @@ event RSDKLoad
 	
 	//Fan Frames
 	SpriteFrame(-14, -8, 26, 16, 148, 59)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

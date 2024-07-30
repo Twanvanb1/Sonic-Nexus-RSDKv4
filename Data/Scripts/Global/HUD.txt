@@ -429,7 +429,17 @@ event ObjectStartup
 
 end event
 
-event RSDK
-	LoadSpriteSheet("Globals/Display.gif")
-	SetEditorIcon(Icon0, SingleIcon, -11, -11, 22, 22, 170, 375)
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Editor.gif")
+	SpriteFrame(-16, -16, 32, 32, 1, 143)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "Text Offset")
 end event

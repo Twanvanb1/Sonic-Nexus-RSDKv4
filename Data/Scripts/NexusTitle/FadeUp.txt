@@ -19,6 +19,8 @@ event ObjectUpdate
 	switch Object.State
 	case 0 //Initialise
 		LoadPalette("NexusTitle.act", 0, 0, 0, 256)
+		LoadPalette("NexusTitle.act", 1, 0, 0, 256)
+		
 		Object.State = 1
 		Object.Timer = 896
 		Object.value1 = 512
@@ -50,8 +52,8 @@ event ObjectUpdate
 			PlayMusic(0)
 		end if
 
-		SetScreenFade(0x00, 0x00, 0x00, Object.Timer)
-		SetScreenFade(0xFF, 0xFF, 0xFF, Object.value1)
+		setPaletteFade(0, 1, 2, Object.Timer, 0, 111)
+		setPaletteFade(0, 1, 2, Object.value1, 112, 255)
 		break
 		
 	end switch
@@ -73,6 +75,18 @@ event ObjectStartup
 	else
 		Object[1].iYPos = -320
 	end if
+
+	temp0 = -1
+	temp1 = 112
+	while temp0 <= 111
+		SetPaletteEntry(2, temp0, 0x000000)
+		temp0++
+	loop
+	
+	while temp1 <= 255
+		SetPaletteEntry(2, temp1, 0xFFFFFF)
+		temp1++
+	loop
 
 	//Setup the any FadeUp
 	//Objects that are present in the level

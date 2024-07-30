@@ -141,4 +141,6 @@ event RSDKLoad
 	LoadSpriteSheet("SSZ/Objects.gif")
 	//Fish Frame
 	SpriteFrame(-16, -16 ,32, 32, 1, 91)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event

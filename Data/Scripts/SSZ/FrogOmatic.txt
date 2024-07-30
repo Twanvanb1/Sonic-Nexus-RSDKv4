@@ -120,9 +120,10 @@ event RSDKDraw
 	DrawSprite(0)
 end event
 
-event RSDKStartup
-	LoadSpriteSheet("SSZ/objects.gif")
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
+	//Fish Frame
+	SpriteFrame(-8, -16, 16, 35, 35, 1)
 	
-	//Frog Left Frames
-	SpriteFrame(-8, -16, 16, 53, 1, 1)
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event
