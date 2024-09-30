@@ -97,8 +97,8 @@ event ObjectUpdate
 
 		end if
 
-		if player[0].yvel > 0x8000
-			Object[0].YVel -= 0x3600
+		if player[0].yvel < 0x10000
+			player[0].YVel += 0x2000
 		end if
 
 		player[0].XVel = player[0].Speed
@@ -127,17 +127,15 @@ event ObjectUpdate
 		if player[0].State == Player_State_Hurt
 			Object.Priority = 1
 			Object.State = PARACHUTE_PLAYER_LEFT
-			ArrayPos0 = Object.PlayerNo
 			player[0].animation = ANI_HURT
-			Object[ArrayPos0].PropertyValue = 0
 			Object.XVel = player[0].XVel
 		end if
 
 		if player[0].Gravity == false
 			Object.Priority = 1
 			Object.State = PARACHUTE_PLAYER_LEFT
-			ArrayPos0 = Object.PlayerNo
-			Object[ArrayPos0].PropertyValue = 0
+			player[0].State = Player_State_Ground
+			CallFunction(Player_HandleOnGround)
 			Object.XVel = player[0].XVel
 		else
 			Object.YVel = player[0].YVel
@@ -152,15 +150,19 @@ event ObjectUpdate
 
 			Object.Priority = 1
 			Object.State = PARACHUTE_PLAYER_LEFT
-			ArrayPos0 = Object.PlayerNo
-			Object[ArrayPos0].PropertyValue = 0
+			Object.XVel = player[0].XVel
+		end if
+
+		if player[0].state != Player_State_Static
+			Object.Priority = 1
+			Object.State = PARACHUTE_PLAYER_LEFT
 			Object.XVel = player[0].XVel
 		end if
 
 		break
 	case PARACHUTE_PLAYER_LEFT
 		if Object.YVel < 0x10000
-			Object.YVel -= -0x2000
+			Object.YVel += 0x2000
 		end if
 
 		Object.XPos += Object.XVel
@@ -189,9 +191,6 @@ event ObjectUpdate
 					Object.StartY = Object.YPos
 
 					Object.PlayerNo = player[0].EntityPos
-					ArrayPos0 = player[0].EntityPos
-					Object[ArrayPos0].PropertyValue = 1
-					player[0].yvel -= 0x3000
 					player[0].Animation = ANI_HANGING
 					Object.XPos = player[0].XPos
 					Object.YPos = player[0].YPos
@@ -216,12 +215,13 @@ event ObjectUpdate
 
 					player[0].Speed = player[0].XVel
 					Object.YPos += temp0
-					Object.State = 1
-					player[0].YVel = 0
+					Object.State = PARACHUTE_PLAYER_HANGING
+
+					// It doesn't make sense for the player to lose all speed, so do this instead
+					player[0].YVel /= 3
 					player[0].Gravity = true
-								
-					player[0].state = Player_State_Air
-					PlaySfx(SFXName[Catch], false)
+					player[0].state = Player_State_Static
+					PlaySfx(SfxName[Catch], false)
 				end if
 			end if
 	next
@@ -250,27 +250,28 @@ event ObjectStartup
 	LoadSpriteSheet("SSZ/Objects.gif")
 	
 	//Parachute Frames
-	SpriteFrame(-24,-20,48,43,98,133)
-	SpriteFrame(-19,-20,48,43,147,133)
-	SpriteFrame(-15,-20,48,43,196,133)
-	SpriteFrame(-19,-20,48,43,147,133)
-	SpriteFrame(-24,-20,48,43,98,133)
-	SpriteFrame(-29,-20,48,43,49,133)
-	SpriteFrame(-34,-20,47,43,1,133)
-	SpriteFrame(-29,-20,48,43,49,133)
+	SpriteFrame(-24, -20, 48, 43, 98, 133)
+	SpriteFrame(-19, -20, 48, 43, 147, 133)
+	SpriteFrame(-15, -20, 48, 43, 196, 133)
+	SpriteFrame(-19, -20, 48, 43, 147, 133)
+	SpriteFrame(-24, -20, 48, 43, 98, 133)
+	SpriteFrame(-29, -20, 48, 43, 49, 133)
+	SpriteFrame(-34, -20, 47, 43, 1, 133)
+	SpriteFrame(-29, -20, 48, 43, 49, 133)
 	
 end event
+
+// ========================
+// Editor Events
+// ========================
 
 event RSDKDraw
 	DrawSprite(0)
 end event
 
-
 event RSDKLoad
 	LoadSpriteSheet("SSZ/Objects.gif")
-	
-	//Parachute Frames
-	SpriteFrame(-24,-20,48,43,98,133)
+	SpriteFrame(-24, -20 ,48 ,43, 98, 133)
 	
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
 end event
