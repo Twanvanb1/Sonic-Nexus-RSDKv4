@@ -7,12 +7,226 @@
 
 private alias object.value0 : object.timer
 
+private alias object.value2 : object.videoSpriteSheet
+
 private alias 3: TYPE_INTRO
 
 private alias  0 : INTRO_LOAD_VIDEO
 private alias  1 : FADE_FROM_BLACK
 private alias  2 : PLAY_VIDEO
 private alias  3 : FADE_TO_WHITE
+
+private function NextVideoSpriteSheet
+	// The monster
+	switch object.videoSpriteSheet
+	case 0
+		LoadSpriteSheet("Videos/Frames1.gif")
+		break
+
+	case 1
+		LoadSpriteSheet("Videos/Frames2.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames1.gif")
+		break
+
+	case 2
+		LoadSpriteSheet("Videos/Frames3.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames2.gif")
+		break
+
+	case 3
+		LoadSpriteSheet("Videos/Frames4.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames3.gif")
+		break
+
+	case 4
+		LoadSpriteSheet("Videos/Frames5.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames4.gif")
+		break
+
+	case 5
+		LoadSpriteSheet("Videos/Frames6.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames5.gif")
+		break
+
+	case 6
+		LoadSpriteSheet("Videos/Frames7.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames6.gif")
+		break
+
+	case 7
+		LoadSpriteSheet("Videos/Frames8.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames7.gif")
+		break
+
+	case 8
+		LoadSpriteSheet("Videos/Frames9.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames8.gif")
+		break
+
+	case 9
+		LoadSpriteSheet("Videos/Frames10.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames9.gif")
+		break
+
+	case 10
+		LoadSpriteSheet("Videos/Frames11.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames10.gif")
+		break
+
+	case 11
+		LoadSpriteSheet("Videos/Frames12.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames11.gif")
+		break
+
+	case 12
+		LoadSpriteSheet("Videos/Frames13.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames12.gif")
+		break
+
+	case 13
+		LoadSpriteSheet("Videos/Frames14.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames13.gif")
+		break
+
+	case 14
+		LoadSpriteSheet("Videos/Frames15.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames14.gif")
+		break
+
+	case 15
+		LoadSpriteSheet("Videos/Frames16.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames15.gif")
+		break
+
+	case 16
+		LoadSpriteSheet("Videos/Frames17.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames16.gif")
+		break
+
+	case 17
+		LoadSpriteSheet("Videos/Frames18.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames17.gif")
+		break
+
+	case 18
+		LoadSpriteSheet("Videos/Frames19.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames18.gif")
+		break
+
+	case 19
+		LoadSpriteSheet("Videos/Frames20.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames19.gif")
+		break
+
+	case 20
+		LoadSpriteSheet("Videos/Frames21.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames20.gif")
+		break
+
+	case 21
+		LoadSpriteSheet("Videos/Frames22.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames21.gif")
+		break
+
+	case 22
+		LoadSpriteSheet("Videos/Frames23.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames22.gif")
+		break
+
+	case 23
+		LoadSpriteSheet("Videos/Frames24.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames23.gif")
+		break
+
+	case 24
+		LoadSpriteSheet("Videos/Frames25.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames24.gif")
+		break
+
+	case 25
+		LoadSpriteSheet("Videos/Frames26.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames25.gif")
+		break
+
+	case 26
+		LoadSpriteSheet("Videos/Frames27.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames26.gif")
+		break
+
+	case 27
+		LoadSpriteSheet("Videos/Frames28.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames27.gif")
+		break
+
+	case 28
+		LoadSpriteSheet("Videos/Frames29.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames28.gif")
+		break
+
+	case 29
+		LoadSpriteSheet("Videos/Frames30.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames29.gif")
+		break
+
+	case 30
+		LoadSpriteSheet("Videos/Frames31.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames30.gif")
+		break
+
+	case 31
+		LoadSpriteSheet("Videos/Frames32.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames31.gif")
+		break
+
+	case 32
+		LoadSpriteSheet("Videos/Frames33.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames32.gif")
+		break
+
+	case 33
+		LoadSpriteSheet("Videos/Frames34.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames33.gif")
+		break
+
+	case 34
+		LoadSpriteSheet("Videos/Frames35.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames34.gif")
+		break
+
+	case 35
+		LoadSpriteSheet("Videos/Frames36.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames35.gif")
+		break
+
+	case 36
+		LoadSpriteSheet("Videos/Frames37.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames36.gif")
+		break
+
+	case 37
+		LoadSpriteSheet("Videos/Frames38.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames37.gif")
+		break
+
+	case 38
+		LoadSpriteSheet("Videos/Frames39.gif")
+		RemoveSpriteSheet("Data/Sprites/Videos/Frames38.gif")
+		break
+	end switch
+end function
+
+private function NextVideoFrame
+	object.frame++
+	if object.frame > 23
+		if object.videoSpriteSheet != 38
+			object.frame = 0
+			object.videoSpriteSheet++
+			CallFunction(NextVideoSpriteSheet)
+		else
+			object.frame = 23
+		end if
+	end if
+end function
 
 event ObjectUpdate
 
@@ -21,6 +235,8 @@ event ObjectUpdate
 		ClearScreen(0)
 		Object.State = 1
 		Object.timer = 512
+		CallFunction(NextVideoSpriteSheet)
+
 		SetScreenFade(0x00, 0x00, 0x00, 0xFF)
 		break
 		
@@ -34,8 +250,7 @@ event ObjectUpdate
 
 		if Object.timer == 432
 			PlayMusic(0)
-			//LoadVideo("Videos/Intro.rsv")
-			//NextVideoFrame()
+			LoadPalette("Intro.act", 0, 0, 0, 256)
 		end if
 		SetScreenFade(0x00, 0x00, 0x00, Object.timer)
 		break
@@ -45,7 +260,7 @@ event ObjectUpdate
 		if Object.timer == 4
 			Object.Value1++
 			Object.timer = 0
-			//NextVideoFrame()
+			CallFunction(NextVideoFrame)
 		end if
 
 		if Object.Value1 == 1008
@@ -84,16 +299,17 @@ event ObjectUpdate
 
 		SetScreenFade(0xFF, 0xFF, 0xFF, Object.timer)
 		break
-		
 	end switch
 	
 end event
 
 event ObjectDraw
-	if Object.State<3
-		DrawSprite(0)
+	// This is here to avoid a wierd Bug in wider screens
+	DrawRect(0, 0, screen.xsize, screen.ysize, 0x00, 0x00, 0x00, 0xFF)
+	if Object.State < 3
+		DrawSprite(object.frame)
 	else
-		DrawSpriteFX(0, FX_SCALE, Object.XPos, Object.YPos)
+		DrawSpriteFX(object.frame, FX_SCALE, Object.XPos, Object.YPos)
 	end if
 end event
 
@@ -106,7 +322,21 @@ event ObjectStartup
 		Object[ArrayPos0].iYPos = 120
 	next
 
-	SpriteFrame(-128, -80, 256, 160, 0, 0)
+	// Setup the video frames
+	// We swap the spritesheets on the fly so no need to do more than the first 23 frames
+	temp0 = 0
+	temp1 = 0
+	temp2 = 0
+	while temp0 < 24
+		SpriteFrame(-128, -80, 256, 160, temp1, temp2)
+
+		temp1 += 256
+		if temp1 >= 1024
+			temp1 = 0
+			temp2 += 160
+		end if
+		temp0++
+	loop
 
 	SetMusicTrack("Nexus/Intro.ogg", 0, false)
 end event

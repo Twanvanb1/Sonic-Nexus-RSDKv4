@@ -54,18 +54,14 @@ event ObjectUpdate
 		if Object.timer < 256
 			Object.timer += 4
 			SetScreenFade(0x00, 0x00, 0x00, Object.timer)
-			//SetScreenFade(0xFF, 0xFF, 0xFF, Object.timer)
 		else
 			Object.timer = 0
 			Object.State = INITIALISE
+			RemoveSpriteSheet("Data/Sprites/NexusTitle/RetroLogo.gif")
 			Object.Type++
 			SetScreenFade(0x00, 0x00, 0x00, 0xFF)
-			//This is here to skip the inro cutcene, I have no Idea on how to implement it
-			// Stage.ListPos = 1
-			// LoadStage()
-			// SetScreenFade(0xFF, 0xFF, 0xFF, 0xFF)
 		end if
-		
+		break
 	end switch
 	
 end event

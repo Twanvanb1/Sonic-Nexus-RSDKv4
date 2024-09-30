@@ -298,7 +298,18 @@ event ObjectStartup
 
 end event
 
-sub RSDK
-	LoadSpriteSheet("NexusGlobals/Display.gif")
-	SetEditorIcon(Icon0,SingleIcon,-15,-15,30,30,193,347)
-end sub
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+
+event RSDKLoad
+	LoadSpriteSheet("Global/Display.gif")
+	SpriteFrame(-15, -15, 30, 30, 193, 347)
+	
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event
