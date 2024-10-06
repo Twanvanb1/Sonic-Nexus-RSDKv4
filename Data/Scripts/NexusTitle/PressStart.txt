@@ -13,10 +13,10 @@ private alias  0 : START_AWAITACTION
 private alias  1 : START_NEWGAME
 
 // Players
-private alias  0 : SONIC
-private alias  1 : TAILS
-private alias  2 : KNUCKLES
-private alias  3 : SONIC_TAILS
+private alias  0 : PLAYER_SONIC_A
+private alias  1 : PLAYER_TAILS_A
+private alias  2 : PLAYER_KNUCKLES_A
+private alias  3 : PLAYER_SONIC_TAILS_A
 
 // ========================
 // Events
@@ -29,28 +29,28 @@ event ObjectUpdate
 #platform: MOBILE
 			CheckTouchRect(0, 0, screen.xsize, screen.ysize)
 			if checkResult > -1
-				object.state = START_NEWGAME
+				Object.State = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
 #endplatform
 
 			if keyPress[0].start == true
-				object.state = START_NEWGAME
+				Object.State = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
 
 			if keyDown[0].buttonA == true
 				if keyDown[0].buttonB == true
 					if keyPress[0].start == true
-						stage.playerListPos = SONIC_TAILS
-						object.state = START_NEWGAME
+						stage.playerListPos = PLAYER_SONIC_TAILS_A
+						Object.State = START_NEWGAME
 						PlaySfx(SfxName[Enter], false)
 					end if
 
 				else
 					if keyPress[0].start == true
-						stage.playerListPos = SONIC
-						object.state = START_NEWGAME
+						stage.playerListPos = PLAYER_SONIC_A
+						Object.State = START_NEWGAME
 						PlaySfx(SfxName[Enter], false)
 					end if
 				end if
@@ -58,16 +58,16 @@ event ObjectUpdate
 
 			if keyDown[0].buttonB == true
 				if keyPress[0].start == true
-					stage.playerListPos = TAILS
-					object.state = START_NEWGAME
+					stage.playerListPos = PLAYER_TAILS_A
+					Object.State = START_NEWGAME
 					PlaySfx(SfxName[Enter], false)
 				end if
 			end if
 
 			if keyDown[0].buttonC == true
 				if keyPress[0].start == true
-					stage.playerListPos = KNUCKLES
-					object.state = START_NEWGAME
+					stage.playerListPos = PLAYER_KNUCKLES_A
+					Object.State = START_NEWGAME
 					PlaySfx(SfxName[Enter], false)
 				end if
 			end if

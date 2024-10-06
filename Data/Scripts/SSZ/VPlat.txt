@@ -54,7 +54,7 @@ event ObjectDraw
 end event
 
 event ObjectStartup
-	LoadSpriteSheet("SSZ/objects.gif")
+	LoadSpriteSheet("SSZ/Objects.gif")
 	//Platform Frame
 	SpriteFrame(-35, -18, 70, 36, 148, 18)
 end event
@@ -67,9 +67,8 @@ event RSDKDraw
 	DrawSprite(0)
 end event
 
-event RSDKStartup
-	LoadSpriteSheet("SSZ/objects.gif")
-	//Platform Frame
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
 	SpriteFrame(-35, -18, 70, 36, 148, 18)
 
 	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")

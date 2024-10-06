@@ -33,7 +33,7 @@ event RSDKDraw
 	DrawSprite(Object.PropertyValue)
 end event
 
-event RSDKStartup
+event RSDKLoad
 	LoadSpriteSheet("SSZ/ZipLine.gif")
 	
 	//Zip Line Frames
