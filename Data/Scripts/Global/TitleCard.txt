@@ -1,7 +1,7 @@
 // ----------------------------------
 // RSDK Project: Sonic Nexus v4
 // Script Description: Title Card Script
-// Script Author: Twanvanb1
+// Script Author: Twanvanb1, BlueSpeedster
 // ----------------------------------
 
 private alias 6 : TYPE_TITLECARD
@@ -331,7 +331,6 @@ event ObjectDraw
 			LoadPalette("BShieldTint.act", 0, 80, 80, 96)
 			//SetBlendTable(128, 1, 16, 80)
 			//SetPaletteFade(0, 1, 0, 0x90, 80, 96)
-
 
 			//Restore Control
 			currentPlayer = 0

@@ -237,22 +237,17 @@ event RSDKDraw
 	temp0 = object.ypos
 	DrawSpriteXY(0, object.xpos, temp0)
 
-	temp0 += 8
+	temp0 += 0x8 0000
 	DrawSpriteXY(0, object.xpos, temp0)
 
-	temp1 = object.ypos
-	temp1 += 20
-	DrawSpriteXY(1, object.xpos, temp1)
+	temp0 += 0xA 0000
+	DrawSpriteXY(1, object.xpos, temp0)
 end event
 
-event RSDKStartup
-	LoadSpriteSheet("SSZ/ZipLine.gif")
+event RSDKLoad
+	LoadSpriteSheet("SSZ/Objects.gif")
 	
 	//Zip Line Frames
-	SpriteFrame(-30, -128, 59, 256, 0, 0)
-	SpriteFrame(-49, -64, 98, 128, 120, 0)
-	SpriteFrame(-47, -24, 94, 48, 219, 0)
-	SpriteFrame(-47, -24, 94, 48, 219, 49)
-	SpriteFrame(-49, -64, 98, 128, 120, 128)
-	SpriteFrame(-30, -128, 59, 256, 60, 0)
+	SpriteFrame(-4, -4, 8, 8, 236, 44)
+	SpriteFrame(-8, -8, 16, 25, 236, 18)
 end event

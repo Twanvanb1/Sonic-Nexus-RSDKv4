@@ -340,3 +340,18 @@ event ObjectStartup
 
 	SetMusicTrack("Nexus/Intro.ogg", 0, false)
 end event
+
+// ========================
+// Editor Events
+// ========================
+
+event RSDKDraw
+	DrawSprite(0)
+end event
+
+event RSDKLoad
+	LoadSpriteSheet("NexusTitle/RetroLogo.gif")
+	SpriteFrame(-160, -120, 320, 240, 0, 0)
+
+	SetVariableAlias(ALIAS_VAR_PROPVAL, "unused")
+end event
