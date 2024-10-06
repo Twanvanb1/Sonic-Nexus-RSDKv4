@@ -1,7 +1,7 @@
 // ----------------------------------
 // RSDK Project: Sonic Nexus v4
 // Script Description: Title Card Script
-// Script Author: Twanvanb1
+// Script Author: Twanvanb1, BlueSpeedster
 // ----------------------------------
 
 private alias 6 : TYPE_TITLECARD
@@ -13,14 +13,14 @@ private alias object.value0 : object.timer
 private alias object.value1 : object.BouncingActBallPos
 
 //Player aliases
-private alias object.ControlMode 	: player.controlmode
-private alias object.Up 			: player.Up
-private alias object.Down 			: player.Down
-private alias object.Left 			: player.Left
-private alias object.Right			: player.Right
-private alias object.JumpPress 		: player.JumpPress
-private alias object.JumpHold		: player.JumpHold
-private alias object.value1  : player.timer
+private alias Object.controlMode 	: player.controlMode
+private alias Object.up 			: player.up 		
+private alias Object.down 			: player.down 		
+private alias Object.left 			: player.left 		
+private alias Object.right 			: player.right 	
+private alias Object.jumpPress 		: player.jumpPress 
+private alias Object.jumpHold 		: player.jumpHold 	
+private alias object.value1  		: player.timer
 
 // Determines whether the act results will say got through zone or got through act [num]
 public value TitleCard_showZoneText = 0
@@ -35,12 +35,18 @@ event ObjectDraw
 	case 0 //Fade Up
 
 		//Freeze Control
-		player[currentPlayer].ControlMode = -1
-		player[currentPlayer].Up = false
-		player[currentPlayer].Down = false
-		player[currentPlayer].Left = false
-		player[currentPlayer].Right = false
-		player[currentPlayer].JumpHold = false
+		currentPlayer = 0
+		while currentPlayer < playerCount
+			player[currentPlayer].controlMode = CONTROLMODE_NONE
+			player[currentPlayer].up 		= false
+			player[currentPlayer].down 		= false
+			player[currentPlayer].left 		= false
+			player[currentPlayer].right 	= false
+			player[currentPlayer].jumpPress = false
+			player[currentPlayer].jumpHold 	= false
+			player[currentPlayer].timer 	= 0
+			currentPlayer++
+		loop
 
 		if object.timer > 0
 			
@@ -327,7 +333,16 @@ event ObjectDraw
 			//SetPaletteFade(0, 1, 0, 0x90, 80, 96)
 
 			//Restore Control
-			player[currentPlayer].ControlMode = 0
+			currentPlayer = 0
+			while currentPlayer < playerCount
+#platform: USE_STANDALONE
+				player[currentPlayer].controlMode = CONTROLMODE_P1
+#endplatform
+#platform: USE_ORIGINS
+				player[currentPlayer].controlMode = currentPlayer
+#endplatform
+				currentPlayer++
+			loop
 
 			//Remove all the Title Card Objects and Replace with the HUD
 			ResetObjectEntity(24, 0, 0, 0, 0)
