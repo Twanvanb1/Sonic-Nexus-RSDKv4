@@ -293,8 +293,13 @@ event ObjectDraw
 		temp2 = screen.xsize
 		temp2 -= 38
 
-		DrawSpriteScreenXY(temp0, temp1, 7)
-		DrawNumbers(0, temp2, 13, player.lives, 1, 8, 1)
+		temp0 = stage.playerListPos
+		temp0 += 16
+		DrawSpriteScreenXY(temp0, Object.LifeXPos, 215)
+		
+		temp0 = Object.LifeXPos
+		temp0 += 25
+		DrawNumbers(0, temp0, 220, player.lives, 1, 8, 1)
 		break
 
 	case 1 //HUD Entering
@@ -358,11 +363,8 @@ event ObjectDraw
 		temp0 = stage.playerListPos
 		temp0 += 16
 		
-		temp1 = screen.xsize
-		temp1 -= 48
-
-		temp2 = screen.xsize
-		temp2 -= 23
+		temp1 = screen.xsize; temp1 -= 48
+		temp2 = screen.xsize; temp2 -= 23
 
 		DrawSpriteScreenXY(temp0, temp1, 7)
 		DrawNumbers(0, temp2, 13, player.lives, 1, 8, 1)

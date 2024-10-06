@@ -38,38 +38,11 @@ event ObjectUpdate
 				object.state = START_NEWGAME
 				PlaySfx(SfxName[Enter], false)
 			end if
-
-			if keyDown[0].buttonA == true
-				if keyDown[0].buttonB == true
-					if keyPress[0].start == true
-						stage.playerListPos = SONIC_TAILS
-						object.state = START_NEWGAME
-						PlaySfx(SfxName[Enter], false)
-					end if
-
-				else
-					if keyPress[0].start == true
-						stage.playerListPos = SONIC
-						object.state = START_NEWGAME
-						PlaySfx(SfxName[Enter], false)
-					end if
-				end if
-			end if
-
-			if keyDown[0].buttonB == true
-				if keyPress[0].start == true
-					stage.playerListPos = TAILS
-					object.state = START_NEWGAME
-					PlaySfx(SfxName[Enter], false)
-				end if
-			end if
-
-			if keyDown[0].buttonC == true
-				if keyPress[0].start == true
-					stage.playerListPos = KNUCKLES
-					object.state = START_NEWGAME
-					PlaySfx(SfxName[Enter], false)
-				end if
+			
+			if keyPress[0].buttonA == true
+				stage.playerListPos = 0
+				object.state = START_NEWGAME
+				PlaySfx(SfxName[Enter], false)
 			end if
 		break
 

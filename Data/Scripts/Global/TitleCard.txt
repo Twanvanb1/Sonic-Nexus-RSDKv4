@@ -13,13 +13,13 @@ private alias object.value0 : object.timer
 private alias object.value1 : object.BouncingActBallPos
 
 //Player aliases
-private alias Object.ControlMode 	: player.controlmode
-private alias Object.Up 			: player.Up
-private alias Object.Down 			: player.Down
-private alias Object.Left 			: player.Left
-private alias Object.Right			: player.Right
-private alias Object.JumpPress 		: player.JumpPress
-private alias Object.JumpHold		: player.JumpHold
+private alias object.ControlMode 	: player.controlmode
+private alias object.Up 			: player.Up
+private alias object.Down 			: player.Down
+private alias object.Left 			: player.Left
+private alias object.Right			: player.Right
+private alias object.JumpPress 		: player.JumpPress
+private alias object.JumpHold		: player.JumpHold
 private alias object.value1  : player.timer
 
 // Determines whether the act results will say got through zone or got through act [num]
@@ -40,7 +40,6 @@ event ObjectDraw
 		player[currentPlayer].Down = false
 		player[currentPlayer].Left = false
 		player[currentPlayer].Right = false
-		player[currentPlayer].JumpPress = false
 		player[currentPlayer].JumpHold = false
 
 		if object.timer > 0
@@ -326,7 +325,6 @@ event ObjectDraw
 			LoadPalette("BShieldTint.act", 0, 80, 80, 96)
 			//SetBlendTable(128, 1, 16, 80)
 			//SetPaletteFade(0, 1, 0, 0x90, 80, 96)
-
 
 			//Restore Control
 			player[currentPlayer].ControlMode = 0

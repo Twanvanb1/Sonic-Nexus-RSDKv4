@@ -5523,16 +5523,6 @@ event ObjectStartup
 				stage.player2Enabled = false
 			end if
 			break
-			
-#platform: USE_ORIGINS
-		case PLAYER_AMY_A
-			LoadAnimation("Amy.ani")
-			player[SLOT_PLAYER1].character 		= PLAYER_AMY
-			player[SLOT_PLAYER1].jumpOffset 	= -4
-			player[SLOT_PLAYER1].jumpAbility 	= Player_Action_DblJumpAmy
-			ANI_PEELOUT 						= ANI_RUNNING
-			break
-#endplatform
 		end switch
 
 		if stage.player2Enabled == true
