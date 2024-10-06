@@ -7,6 +7,7 @@
 
 private alias Object.Value0 : Object.YSpeed
 private alias Object.Value1 : Object.ScaleSpeed
+private alias Object.Value2 : Object.Timer
 private alias Object.Value3 : SonicBlink
 private alias Object.Value4 : TailsBlink
 
@@ -44,9 +45,9 @@ event ObjectUpdate
 				Object.State++
 			end if
 		else
-			Object.Value2++
-			if Object.Value2 > 127
-				Object.Value2 = 0
+			Object.Timer++
+			if Object.Timer > 127
+				Object.Timer = 0
 				Object.PropertyValue = 2
 				Rand(SonicBlink, 256)
 				SonicBlink += 19
@@ -64,12 +65,12 @@ event ObjectDraw
 	if Object.PropertyValue == 1
 		DrawSpriteFX(0, FX_SCALE, object.xpos, Object.YPos)
 	else
-		Object.Value2 += 8
-		if Object.Value2 > 511
-			Object.Value2 -= 512
+		Object.Timer += 8
+		if Object.Timer > 511
+			Object.Timer -= 512
 		end if
 
-		Sin(Object.Rotation, Object.Value2)
+		Sin(Object.Rotation, Object.Timer)
 		Object.Rotation >>= 4
 
 		temp1 = screen.ycenter

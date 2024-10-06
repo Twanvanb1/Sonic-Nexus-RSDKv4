@@ -106,7 +106,7 @@ event RSDKDraw
 	DrawSprite(0)
 end event
 
-event RSDKStartup
+event RSDKLoad
 	LoadSpriteSheet("SSZ/objects.gif")
 	//Platform Frame
 	SpriteFrame(-35, -18, 70, 36, 148, 18)
