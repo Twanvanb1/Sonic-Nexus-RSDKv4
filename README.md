@@ -10,6 +10,9 @@
 ### Q: I found a bug!
 A: Submit them under the `issues` tab and I will try to fix it.
 
+> [!IMPORTANT]
+> make sure you have the latest build of [RSDKv4](https://github.com/RSDKModding/RSDKv4-Decompilation) and the [Sonic 1 & 2 Scripts](https://github.com/RSDKModding/RSDKv4-Script-Decompilation).
+
 ### Q: Will there be an Android, iOS, Steam Deck, etc port?
 A: Everything in this project comes as-is. If it doesn't run on a specific platform, don't get your hopes up on it being fixed.
 
