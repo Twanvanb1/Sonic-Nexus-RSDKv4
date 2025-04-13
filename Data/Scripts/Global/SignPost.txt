@@ -634,7 +634,7 @@ end event
 
 event RSDKLoad
 	LoadSpriteSheet("Global/Items2.gif")
-	SpriteFrame(-24, 16, 48, 16, 34, 132)
+	SpriteFrame(-24, 16, 48, 24, 34, 132)
 	SpriteFrame(-24, -16, 48, 32, 34, 100)
 
 	AddEditorVariable("type")
