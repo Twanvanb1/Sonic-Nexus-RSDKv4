@@ -39,8 +39,7 @@ event ObjectUpdate
 		else
 			ResetObjectEntity(Object.EntityPos, 5, 0, 0,0)
 			ArrayPos0 = Object.EntityPos
-			temp0 = screen.xcenter
-			Object[ArrayPos0].iXPos = temp0
+			Object[ArrayPos0].iXPos = screen.xcenter
 			Object[ArrayPos0].iYPos = 200
 		end if
 
@@ -62,8 +61,8 @@ end event
 event ObjectStartup
 	Object.State = 2
 	Object[1].Type = 3
-	temp0 = screen.xcenter
-	Object[1].iXPos = temp0
+
+	Object[1].iXPos = screen.xcenter
 	Object[1].Priority = 1
 
 	Object[1].PropertyValue = 1

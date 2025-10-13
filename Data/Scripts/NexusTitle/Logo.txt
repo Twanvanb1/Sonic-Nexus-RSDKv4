@@ -22,8 +22,8 @@ event ObjectUpdate
 			Object.YSpeed += 16384
 			Object.YPos += Object.YSpeed
 
-			if Object.YPos > 7077888
-				Object.YPos = 7077888
+			if Object.YPos > 0x108 0000
+				Object.YPos = 0x108 0000
 				Object.YSpeed >>= 1
 				FlipSign(Object.YSpeed)
 				Object.State++
@@ -71,7 +71,6 @@ event ObjectDraw
 
 		Sin(Object.Rotation, Object.Value2)
 		Object.Rotation >>= 4
-
 		temp1 = screen.ycenter
 		temp1 -= 12
 		DrawSpriteScreenXY(1, screen.xcenter, temp1)
